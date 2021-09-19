@@ -4,8 +4,8 @@ namespace MayMeow\Cryptography;
 
 class RSAParameters
 {
-    private string $privateKey;
-    private string $publicKey;
+    private $privateKey;
+    private $publicKey;
     private string $passphrase;
 
     protected array $config = [
@@ -48,7 +48,7 @@ class RSAParameters
     /**
      * @param string $privateKey
      */
-    public function setPrivateKey(string $privateKey): void
+    public function setPrivateKey($privateKey): void
     {
         $this->privateKey = $privateKey;
     }
@@ -56,7 +56,7 @@ class RSAParameters
     /**
      * @return string
      */
-    public function getPublicKey(): string
+    public function getPublicKey()
     {
         return $this->publicKey;
     }
@@ -64,7 +64,7 @@ class RSAParameters
     /**
      * @param string $publicKey
      */
-    public function setPublicKey(string $publicKey): void
+    public function setPublicKey($publicKey): void
     {
         $this->publicKey = $publicKey;
     }
