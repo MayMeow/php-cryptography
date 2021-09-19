@@ -1,5 +1,7 @@
 # MayMeow/Cryptography
 
+[![PHP Composer](https://github.com/MayMeow/php-cryptography/actions/workflows/php.yml/badge.svg)](https://github.com/MayMeow/php-cryptography/actions/workflows/php.yml)
+
 ## Development
 
 This project contains dev container. To start development build container
