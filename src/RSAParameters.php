@@ -8,7 +8,7 @@ class RSAParameters
     private string $publicKey;
     private string $passphrase;
 
-    protected array $_config = [
+    protected array $config = [
         'digest_alg' => 'sha512',
         'private_key_bits' => 4096,
         'private_key_type' => OPENSSL_KEYTYPE_RSA,
@@ -20,7 +20,7 @@ class RSAParameters
 
     public function generateKeys(?string $passphrase = null, ?array $configArgs = null) : void
     {
-        $keys = openssl_pkey_new($this->_config);
+        $keys = openssl_pkey_new($this->config);
 
         if ($passphrase != null) {
             $this->passphrase = $passphrase;
@@ -88,7 +88,7 @@ class RSAParameters
      */
     public function getConfig(): array
     {
-        return $this->_config;
+        return $this->config;
     }
 
     /**
@@ -96,6 +96,6 @@ class RSAParameters
      */
     public function setConfig(array $config): void
     {
-        $this->_config = $config;
+        $this->config = $config;
     }
 }

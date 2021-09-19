@@ -84,7 +84,15 @@ class AESCryptoServiceProvider
      */
     public function encrypt(string $plainText): string
     {
-        $encryptedBytes = openssl_encrypt($plainText, $this->cipher, $this->key, OPENSSL_RAW_DATA, $this->iv, $this->tag, $this->aad);
+        $encryptedBytes = openssl_encrypt(
+            $plainText,
+            $this->cipher,
+            $this->key,
+            OPENSSL_RAW_DATA,
+            $this->iv,
+            $this->tag,
+            $this->aad
+        );
 
         return base64_encode($this->iv . $this->tag . $encryptedBytes);
     }
@@ -103,6 +111,14 @@ class AESCryptoServiceProvider
         $this->tag = substr($c, $iv_len, static::DEFAULT_GCM_TAG_LENGTH);
         $encryptedBytes = substr($c, $iv_len + static::DEFAULT_GCM_TAG_LENGTH);
 
-        return openssl_decrypt($encryptedBytes, $this->cipher, $this->key, OPENSSL_RAW_DATA, $this->iv, $this->tag, $this->aad);
+        return openssl_decrypt(
+            $encryptedBytes,
+            $this->cipher,
+            $this->key,
+            OPENSSL_RAW_DATA,
+            $this->iv,
+            $this->tag,
+            $this->aad
+        );
     }
 }
