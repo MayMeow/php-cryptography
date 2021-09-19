@@ -1,0 +1,29 @@
+{
+    "name": "maymeow/cryptography",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Maymeow\\Cryptography\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Maymeow\\Cryptography\\Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "May Meow",
+            "email": "hello@maymeow.moe"
+        }
+    ],
+    "require": {
+        "php": "7.4.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "scripts": {
+        "test": "phpunit tests"
+    }
+}
