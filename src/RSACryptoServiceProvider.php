@@ -39,7 +39,11 @@ class RSACryptoServiceProvider
         return $plainText;
     }
 
-    public function private_encrypt($plainText) : string
+    /**
+     * @param $plainText
+     * @return string
+     */
+    public function privateEncrypt($plainText) : string
     {
         $encrypted = '';
         $privKey = $this->parameters->getPrivateKey();
@@ -49,7 +53,11 @@ class RSACryptoServiceProvider
         return base64_encode($encrypted);
     }
 
-    public function public_decrypt($encryptedText) : string
+    /**
+     * @param $encryptedText
+     * @return string
+     */
+    public function publicDecrypt($encryptedText) : string
     {
         $plainText = '';
         openssl_public_decrypt(base64_decode($encryptedText), $plainText, $this->parameters->getPublicKey());
@@ -57,6 +65,10 @@ class RSACryptoServiceProvider
         return $plainText;
     }
 
+    /**
+     * @param string $plain_text
+     * @return string
+     */
     protected function seal(string $plain_text) : string
     {
         //openssl_open($plain_text, $sealed_data, $ekeys, [$this->parameters->getPrivateKey()])
@@ -64,7 +76,7 @@ class RSACryptoServiceProvider
 
     protected function open()
     {
-
+        // todo
     }
 
     /**
@@ -73,7 +85,7 @@ class RSACryptoServiceProvider
      */
     public function sign($data) : string
     {
-        $privKey = $this->_getPrivateKey();
+        $privKey = $this->getPrivateKey();
 
         $result = openssl_sign($data, $signature, $privKey, OPENSSL_ALGO_SHA512);
 
@@ -87,7 +99,12 @@ class RSACryptoServiceProvider
      */
     public function verify($data, $signature) : bool
     {
-        $verification = openssl_verify($data, base64_decode($signature), $this->parameters->getPublicKey(), OPENSSL_ALGO_SHA512);
+        $verification = openssl_verify(
+            $data,
+            base64_decode($signature),
+            $this->parameters->getPublicKey(),
+            OPENSSL_ALGO_SHA512
+        );
 
         return (bool)$verification;
     }
@@ -102,7 +119,11 @@ class RSACryptoServiceProvider
         return $fingerprint;
     }
 
-    protected function _getPrivateKey()
+    /**
+     * @return string
+     * @deprecated
+     */
+    private function getPrivateKey()
     {
         return $this->parameters->getPrivateKey();
     }
