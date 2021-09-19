@@ -13,7 +13,7 @@ class PBKDF2Test extends TestCase
     {
         $p = new CryptoKey();
 
-        $this->assertEquals("Hello World", $p->HelloWorld());
+        $this->assertEquals("Hello World", $p->helloWorld());
     }
 
     /** @test */
