@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Maymeow\Cryptography\Tests;
+namespace MayMeow\Cryptography\Tests;
 
-use Maymeow\Cryptography\CryptoKey;
+use MayMeow\Cryptography\CryptoKey;
 use PHPUnit\Framework\TestCase;
 
 class PBKDF2Test extends TestCase

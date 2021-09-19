@@ -3,12 +3,12 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Maymeow\\Cryptography\\": "src/"
+            "MayMeow\\Cryptography\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Maymeow\\Cryptography\\Tests\\": "tests/"
+            "MayMeow\\Cryptography\\Tests\\": "tests/"
         }
     },
     "authors": [
