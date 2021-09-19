@@ -19,6 +19,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: PHPCS by MayMeow
-      uses: MayMeowHQ/PHPCS-Action@v1
+      uses: MayMeowHQ/PHPCS-Action@v2
 
       
