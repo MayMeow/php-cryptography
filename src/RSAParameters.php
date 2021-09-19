@@ -26,9 +26,11 @@ class RSAParameters
             $this->passphrase = $passphrase;
         }
 
-        openssl_pkey_export($keys, $this->privateKey, $this->passphrase, $configArgs);
+        openssl_pkey_export($keys, $private, $passphrase, $configArgs);
+        $this->privateKey = $private;
+
         $pub = openssl_pkey_get_details($keys);
-        $this->publicKey = $pub[0];
+        $this->publicKey = $pub['key'];
     }
 
     /**
