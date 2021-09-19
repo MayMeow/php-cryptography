@@ -7,12 +7,18 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
-    
     - name: PHPUnit Test by MayMeow
       uses: MayMeowHQ/PHPUnit-Test-Action@v7.4.16-cs-1
+      
+  qa:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: action/checkout@v2
+    - name: PHPCS by MayMeow
+      uses: MayMeowHQ/PHPCS-Action@v1
+
+      
