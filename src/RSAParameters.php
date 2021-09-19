@@ -36,7 +36,7 @@ class RSAParameters
     /**
      * @return string
      */
-    public function getPrivateKey(): string
+    public function getPrivateKey()
     {
         if ($this->passphrase != null && $this->privateKey != null) {
             return openssl_pkey_get_private($this->privateKey, $this->passphrase);
