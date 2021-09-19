@@ -17,7 +17,7 @@ jobs:
   qa:
     runs-on: ubuntu-latest
     steps:
-    - uses: action/checkout@v2
+    - uses: actions/checkout@v2
     - name: PHPCS by MayMeow
       uses: MayMeowHQ/PHPCS-Action@v1
 
