@@ -21,7 +21,7 @@ class RSACryptoServiceProvider
     {
         $encrypted = '';
 
-        openssl_public_encrypt($plainText,$encrypted, $this->parameters->getPublicKey());
+        openssl_public_encrypt($plainText, $encrypted, $this->parameters->getPublicKey());
 
         return base64_encode($encrypted);
     }
