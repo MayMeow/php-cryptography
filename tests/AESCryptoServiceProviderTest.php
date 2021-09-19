@@ -15,7 +15,7 @@ class AESCryptoServiceProviderTest extends TestCase
         $key = $csp->generateKey();
 
         $plainText = "This is going to be encrypted!";
-        $encryptedText= $csp->decrypt($plainText);
+        $encryptedText= $csp->encrypt($plainText);
 
         $csp2 = new AESCryptoServiceProvider();
         $csp2->setKey($key);
