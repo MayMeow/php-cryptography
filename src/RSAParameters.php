@@ -18,7 +18,12 @@ class RSAParameters
     {
     }
 
-    public function generateKeys(?string $passphrase = null, ?array $configArgs = null) : void
+    /**
+     * @param string|null $passphrase
+     * @param array|null $configArgs
+     * @return RSACryptoServiceProvider
+     */
+    public function generateKeys(?string $passphrase = null, ?array $configArgs = null) : RSACryptoServiceProvider
     {
         $keys = openssl_pkey_new($this->config);
 
@@ -31,6 +36,8 @@ class RSAParameters
 
         $pub = openssl_pkey_get_details($keys);
         $this->publicKey = $pub['key'];
+
+        return $this;
     }
 
     /**
