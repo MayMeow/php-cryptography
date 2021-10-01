@@ -21,9 +21,9 @@ class RSAParameters
     /**
      * @param string|null $passphrase
      * @param array|null $configArgs
-     * @return RSACryptoServiceProvider
+     * @return $this
      */
-    public function generateKeys(?string $passphrase = null, ?array $configArgs = null) : RSACryptoServiceProvider
+    public function generateKeys(?string $passphrase = null, ?array $configArgs = null) : RSAParameters
     {
         $keys = openssl_pkey_new($this->config);
 
@@ -86,9 +86,9 @@ class RSAParameters
 
     /**
      * @param string $passphrase
-     * @return RSACryptoServiceProvider
+     * @return $this
      */
-    public function setPassphrase(string $passphrase): RSACryptoServiceProvider
+    public function setPassphrase(string $passphrase): RSAParameters
     {
         $this->passphrase = $passphrase;
 
