@@ -86,10 +86,13 @@ class RSAParameters
 
     /**
      * @param string $passphrase
+     * @return RSACryptoServiceProvider
      */
-    public function setPassphrase(string $passphrase): void
+    public function setPassphrase(string $passphrase): RSACryptoServiceProvider
     {
         $this->passphrase = $passphrase;
+
+        return $this;
     }
 
     /**
