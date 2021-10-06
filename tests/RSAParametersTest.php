@@ -11,8 +11,8 @@ class RSAParametersTest extends TestCase
     /** @test */
     public function canGenerateKeys() :void {
         $parameters = new RSAParameters();
-        $parameters->generateKeys();
+        $keys =  $parameters->generateKeys();
 
-        $this->assertInstanceOf(RSAParameters::class, $parameters);
+        $this->assertInstanceOf(RSAParameters::class, $keys);
     }
 }
