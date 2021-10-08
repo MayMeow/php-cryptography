@@ -17,7 +17,7 @@ jobs:
         composer_script: 'test'
 
       
-  qa:
+  codesniffer:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -25,5 +25,14 @@ jobs:
       uses: MayMeowHQ/composer-run-action@v1
       with:
         composer_script: 'codesniffer'
+  
+  stan:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Composer run action PHPStan
+      uses: MayMeowHQ/composer-run-action@v1
+      with:
+        composer_script: 'stan'
 
       
