@@ -11,14 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: PHPUnit Test by MayMeow
-      uses: MayMeowHQ/PHPUnit-Test-Action@v7.4.16-cs-1
+    - name: Composer run action PHPUnit
+      uses: MayMeowHQ/composer-run-action@v1
+      with:
+        composer_script: 'test'
+
       
   qa:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: PHPCS by MayMeow
-      uses: MayMeowHQ/PHPCS-Action@v2
+    - name: Composer run action PHPC_CS
+      uses: MayMeowHQ/composer-run-action@v1
+      with:
+        composer_script: 'codesniffer'
 
       
