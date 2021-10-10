@@ -11,6 +11,8 @@ class CryptoKey
     }
 
     /**
+     * Derivate cryptographic key from given password
+     *
      * @param string $password
      * @param string|null $salt
      * @param int $iterations

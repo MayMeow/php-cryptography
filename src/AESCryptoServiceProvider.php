@@ -30,6 +30,8 @@ class AESCryptoServiceProvider
     }
 
     /**
+     * Set IV
+     *
      * @param string  $iv
      * @return AESCryptoServiceProvider
      */
@@ -41,6 +43,8 @@ class AESCryptoServiceProvider
     }
 
     /**
+     * Set key needed for encryption
+     *
      * @param string $key
      * @return AESCryptoServiceProvider
      */
@@ -52,6 +56,8 @@ class AESCryptoServiceProvider
     }
 
     /**
+     * Generate key
+     *
      * @return bool|string
      */
     public function generateKey()
@@ -68,6 +74,8 @@ class AESCryptoServiceProvider
     }
 
     /**
+     * Generate IV
+     *
      * @return bool|string
      */
     public function generateIV()
@@ -107,6 +115,8 @@ class AESCryptoServiceProvider
     }
 
     /**
+     * Decrypt given text
+     *
      * @param string $encryptedData
      * @return string
      * @throws DecryptException

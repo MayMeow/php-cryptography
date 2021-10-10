@@ -114,16 +114,22 @@ class RSACryptoServiceProvider
     }
 
     /**
+     * Returns fingerprint from given public key
+     *
      * @return string
      */
-    public function getFingerPrint() : string
+    public function getFingerPrint(string $publicKey = null) : string
     {
-        $fingerprint = join(':', str_split(md5(base64_decode($this->parameters->getPublicKey())), 2));
+        if ($publicKey == null) {
+            $publicKey = $this->parameters->getPublicKey();
+        }
 
-        return $fingerprint;
+        return join(':', str_split(md5(base64_decode($publicKey)), 2));
     }
 
     /**
+     * Returns RSA Parameters private key
+     *
      * @return resource|string
      * @throws Exceptions\DecryptPrivateKeyException
      */
