@@ -2,10 +2,12 @@
 
 namespace MayMeow\Cryptography;
 
+use MayMeow\Cryptography\Exceptions\DecryptPrivateKeyException;
+
 class RSAParameters
 {
-    private $privateKey;
-    private $publicKey;
+    private string $privateKey;
+    private string $publicKey;
     private string $passphrase;
 
     protected array $config = [
@@ -31,31 +33,43 @@ class RSAParameters
             $this->passphrase = $passphrase;
         }
 
-        openssl_pkey_export($keys, $private, $passphrase, $configArgs);
-        $this->privateKey = $private;
+        if ($keys) {
+            openssl_pkey_export($keys, $private, $passphrase, $configArgs);
+            $this->privateKey = $private;
 
-        $pub = openssl_pkey_get_details($keys);
-        $this->publicKey = $pub['key'];
+            $pub = openssl_pkey_get_details($keys);
+
+            if (is_array($pub)) {
+                $this->publicKey = $pub['key'];
+            }
+        }
 
         return $this;
     }
 
     /**
-     * @return string
+     * @return resource|string
+     * @throws DecryptPrivateKeyException
      */
     public function getPrivateKey()
     {
         if ($this->passphrase != null && $this->privateKey != null) {
-            return openssl_pkey_get_private($this->privateKey, $this->passphrase);
+            $privateKeyResource = openssl_pkey_get_private($this->privateKey, $this->passphrase);
+
+            if ($privateKeyResource == false) {
+                throw new DecryptPrivateKeyException();
+            }
+
+            return $privateKeyResource;
         }
 
-        return $this->publicKey;
+        return $this->privateKey;
     }
 
     /**
      * @param string $privateKey
      */
-    public function setPrivateKey($privateKey): void
+    public function setPrivateKey(string $privateKey): void
     {
         $this->privateKey = $privateKey;
     }
@@ -63,7 +77,7 @@ class RSAParameters
     /**
      * @return string
      */
-    public function getPublicKey()
+    public function getPublicKey() : string
     {
         return $this->publicKey;
     }
@@ -71,7 +85,7 @@ class RSAParameters
     /**
      * @param string $publicKey
      */
-    public function setPublicKey($publicKey): void
+    public function setPublicKey(string $publicKey): void
     {
         $this->publicKey = $publicKey;
     }

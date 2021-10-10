@@ -2,6 +2,8 @@
 
 namespace MayMeow\Cryptography;
 
+use MayMeow\Cryptography\Exceptions\NotImplementedException;
+
 class RSACryptoServiceProvider
 {
     protected RSAParameters $parameters;
@@ -17,7 +19,7 @@ class RSACryptoServiceProvider
     /**
      * encrypt file with public key
      */
-    public function encrypt($plainText) : string
+    public function encrypt(string $plainText) : string
     {
         $encrypted = '';
 
@@ -29,7 +31,7 @@ class RSACryptoServiceProvider
     /**
      * decrypt with private key
      */
-    public function decrypt($encryptedText) : string
+    public function decrypt(string $encryptedText) : string
     {
         $plainText = '';
         $privKey = $this->parameters->getPrivateKey();
@@ -40,10 +42,10 @@ class RSACryptoServiceProvider
     }
 
     /**
-     * @param $plainText
+     * @param string $plainText
      * @return string
      */
-    public function privateEncrypt($plainText) : string
+    public function privateEncrypt(string $plainText) : string
     {
         $encrypted = '';
         $privKey = $this->parameters->getPrivateKey();
@@ -54,10 +56,10 @@ class RSACryptoServiceProvider
     }
 
     /**
-     * @param $encryptedText
+     * @param string $encryptedText
      * @return string
      */
-    public function publicDecrypt($encryptedText) : string
+    public function publicDecrypt(string $encryptedText) : string
     {
         $plainText = '';
         openssl_public_decrypt(base64_decode($encryptedText), $plainText, $this->parameters->getPublicKey());
@@ -72,18 +74,20 @@ class RSACryptoServiceProvider
     protected function seal(string $plain_text) : string
     {
         //openssl_open($plain_text, $sealed_data, $ekeys, [$this->parameters->getPrivateKey()])
+
+        throw new NotImplementedException();
     }
 
-    protected function open()
+    protected function open() : string
     {
-        // todo
+        throw new NotImplementedException();
     }
 
     /**
-     * @param $data
+     * @param string $data
      * @return string
      */
-    public function sign($data) : string
+    public function sign(string $data) : string
     {
         $privKey = $this->getPrivateKey();
 
@@ -93,11 +97,11 @@ class RSACryptoServiceProvider
     }
 
     /**
-     * @param $data
-     * @param $signature
+     * @param string $data
+     * @param string $signature
      * @return bool
      */
-    public function verify($data, $signature) : bool
+    public function verify(string $data, string $signature) : bool
     {
         $verification = openssl_verify(
             $data,
@@ -110,18 +114,24 @@ class RSACryptoServiceProvider
     }
 
     /**
+     * Returns fingerprint from given public key
+     *
      * @return string
      */
-    public function getFingerPrint() : string
+    public function getFingerPrint(string $publicKey = null) : string
     {
-        $fingerprint = join(':', str_split(md5(base64_decode($this->parameters->getPublicKey())), 2));
+        if ($publicKey == null) {
+            $publicKey = $this->parameters->getPublicKey();
+        }
 
-        return $fingerprint;
+        return join(':', str_split(md5(base64_decode($publicKey)), 2));
     }
 
     /**
-     * @return string
-     * @deprecated
+     * Returns RSA Parameters private key
+     *
+     * @return resource|string
+     * @throws Exceptions\DecryptPrivateKeyException
      */
     private function getPrivateKey()
     {
