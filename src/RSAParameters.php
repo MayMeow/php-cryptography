@@ -2,6 +2,8 @@
 
 namespace MayMeow\Cryptography;
 
+use MayMeow\Cryptography\Exceptions\DecryptPrivateKeyException;
+
 class RSAParameters
 {
     private string $privateKey;
@@ -47,7 +49,7 @@ class RSAParameters
 
     /**
      * @return resource|string
-     * @throws \Exception
+     * @throws DecryptPrivateKeyException
      */
     public function getPrivateKey()
     {
@@ -55,7 +57,7 @@ class RSAParameters
             $privateKeyResource = openssl_pkey_get_private($this->privateKey, $this->passphrase);
 
             if ($privateKeyResource == false) {
-                throw new \Exception("Cannot decrypt private key with given password");
+                throw new DecryptPrivateKeyException();
             }
 
             return $privateKeyResource;

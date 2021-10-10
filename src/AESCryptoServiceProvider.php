@@ -2,7 +2,6 @@
 
 namespace MayMeow\Cryptography;
 
-use _PHPStan_76800bfb5\Nette\Neon\Exception;
 use MayMeow\Cryptography\Exceptions\DecryptException;
 use MayMeow\Cryptography\Exceptions\IvGenerateException;
 
