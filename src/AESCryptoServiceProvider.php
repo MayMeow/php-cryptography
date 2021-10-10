@@ -2,22 +2,26 @@
 
 namespace MayMeow\Cryptography;
 
+use _PHPStan_76800bfb5\Nette\Neon\Exception;
+use MayMeow\Cryptography\Exceptions\DecryptException;
+use MayMeow\Cryptography\Exceptions\IvGenerateException;
+
 class AESCryptoServiceProvider
 {
     const CIPHER_TYPE_GCM = 'aes-256-gcm';
     const DEFAULT_GCM_TAG_LENGTH = 16;
 
-    protected $cipher;
+    protected string $cipher;
 
-    protected $iv;
+    protected string $iv;
 
-    protected $key;
+    protected string $key;
 
-    protected $aad = "127.0.0.1";
+    protected string $aad = "127.0.0.1";
 
-    protected $tag;
+    protected string $tag;
 
-    public function __construct($cipher = null)
+    public function __construct(string $cipher = null)
     {
         if ($cipher == null) {
             $this->cipher = static::CIPHER_TYPE_GCM;
@@ -27,10 +31,10 @@ class AESCryptoServiceProvider
     }
 
     /**
-     * @param $iv
+     * @param string  $iv
      * @return AESCryptoServiceProvider
      */
-    public function setIV($iv): AESCryptoServiceProvider
+    public function setIV(string $iv): AESCryptoServiceProvider
     {
         $this->iv = $iv;
 
@@ -38,10 +42,10 @@ class AESCryptoServiceProvider
     }
 
     /**
-     * @param $key
+     * @param string $key
      * @return AESCryptoServiceProvider
      */
-    public function setKey($key): AESCryptoServiceProvider
+    public function setKey(string $key): AESCryptoServiceProvider
     {
         $this->key = $key;
 
@@ -54,7 +58,8 @@ class AESCryptoServiceProvider
     public function generateKey()
     {
         if (in_array($this->cipher, openssl_get_cipher_methods())) {
-            $this->key = openssl_random_pseudo_bytes(32);
+
+            if ($key = openssl_random_pseudo_bytes(32)) $this->key = $key;
 
             return $this->key;
         }
@@ -68,7 +73,10 @@ class AESCryptoServiceProvider
     public function generateIV()
     {
         if (in_array($this->cipher, openssl_get_cipher_methods())) {
-            $this->iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($this->cipher));
+
+            if ($ivLength = openssl_cipher_iv_length($this->cipher)) {
+                if ($iv = openssl_random_pseudo_bytes($ivLength)) $this->iv = $iv;
+            }
 
             return $this->iv;
         }
@@ -98,20 +106,26 @@ class AESCryptoServiceProvider
     }
 
     /**
-     * Returns decrypted text
      * @param string $encryptedData
      * @return string
+     * @throws DecryptException
+     * @throws IvGenerateException
      */
     public function decrypt(string $encryptedData): string
     {
         $c = base64_decode($encryptedData);
 
-        $iv_len = openssl_cipher_iv_length($this->cipher);
+        if ($ivLength =  openssl_cipher_iv_length($this->cipher)) {
+            $iv_len = $ivLength;
+        } else {
+            throw new IvGenerateException();
+        }
+
         $this->iv = substr($c, 0, $iv_len);
         $this->tag = substr($c, $iv_len, static::DEFAULT_GCM_TAG_LENGTH);
         $encryptedBytes = substr($c, $iv_len + static::DEFAULT_GCM_TAG_LENGTH);
 
-        return openssl_decrypt(
+        $decryptedText =  openssl_decrypt(
             $encryptedBytes,
             $this->cipher,
             $this->key,
@@ -120,5 +134,9 @@ class AESCryptoServiceProvider
             $this->tag,
             $this->aad
         );
+
+        if ($decryptedText == false) throw new DecryptException();
+
+        return  $decryptedText;
     }
 }
