@@ -19,7 +19,7 @@ class AESCryptoServiceProvider
 
     protected string $aad = "127.0.0.1";
 
-    protected string $tag;
+    protected string $tag = '';
 
     public function __construct(string $cipher = null)
     {
@@ -58,8 +58,9 @@ class AESCryptoServiceProvider
     public function generateKey()
     {
         if (in_array($this->cipher, openssl_get_cipher_methods())) {
-
-            if ($key = openssl_random_pseudo_bytes(32)) $this->key = $key;
+            if ($key = openssl_random_pseudo_bytes(32)) {
+                $this->key = $key;
+            }
 
             return $this->key;
         }
@@ -73,9 +74,10 @@ class AESCryptoServiceProvider
     public function generateIV()
     {
         if (in_array($this->cipher, openssl_get_cipher_methods())) {
-
             if ($ivLength = openssl_cipher_iv_length($this->cipher)) {
-                if ($iv = openssl_random_pseudo_bytes($ivLength)) $this->iv = $iv;
+                if ($iv = openssl_random_pseudo_bytes($ivLength)) {
+                    $this->iv = $iv;
+                }
             }
 
             return $this->iv;
@@ -135,7 +137,9 @@ class AESCryptoServiceProvider
             $this->aad
         );
 
-        if ($decryptedText == false) throw new DecryptException();
+        if ($decryptedText == false) {
+            throw new DecryptException();
+        }
 
         return  $decryptedText;
     }

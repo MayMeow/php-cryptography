@@ -46,15 +46,22 @@ class RSAParameters
     }
 
     /**
-     * @return string
+     * @return resource|string
+     * @throws \Exception
      */
-    public function getPrivateKey() : string
+    public function getPrivateKey()
     {
         if ($this->passphrase != null && $this->privateKey != null) {
-            return openssl_pkey_get_private($this->privateKey, $this->passphrase);
+            $privateKeyResource = openssl_pkey_get_private($this->privateKey, $this->passphrase);
+
+            if ($privateKeyResource == false) {
+                throw new \Exception("Cannot decrypt private key with given password");
+            }
+
+            return $privateKeyResource;
         }
 
-        return $this->publicKey;
+        return $this->privateKey;
     }
 
     /**
