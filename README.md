@@ -8,7 +8,8 @@ This package replaces https://github.com/MayMeow/php-encrypt
 
 # Requirements
 
-* PHP 7.4.*
+- PHP 8.*
+- openssl extension
 
 ## What it is contained
 
