@@ -48,10 +48,10 @@ class RSAParameters
     }
 
     /**
-     * @return resource|string
+     * @return string|\OpenSSLAsymmetricKey
      * @throws DecryptPrivateKeyException
      */
-    public function getPrivateKey()
+    public function getPrivateKey() : \OpenSSLAsymmetricKey|string
     {
         if ($this->passphrase != null && $this->privateKey != null) {
             $privateKeyResource = openssl_pkey_get_private($this->privateKey, $this->passphrase);

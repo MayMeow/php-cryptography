@@ -128,12 +128,10 @@ class RSACryptoServiceProvider
     }
 
     /**
-     * Returns RSA Parameters private key
-     *
-     * @return resource|string
+     * @return \OpenSSLAsymmetricKey|string
      * @throws Exceptions\DecryptPrivateKeyException
      */
-    private function getPrivateKey()
+    private function getPrivateKey() : \OpenSSLAsymmetricKey|string
     {
         return $this->parameters->getPrivateKey();
     }
