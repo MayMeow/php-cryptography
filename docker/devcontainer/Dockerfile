@@ -1,4 +1,4 @@
-FROM ghcr.io/maymeow/php-ci-cd/php-ci-cd:7.4.16-cs-1
+FROM ghcr.io/maymeow/php-ci-cd/php-ci-cd:8.0.11-cs
 
 # arguments in docker-compose file
 ARG user=vscode
