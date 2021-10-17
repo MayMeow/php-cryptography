@@ -28,7 +28,7 @@
     },
     "scripts": {
         "test": "phpunit tests",
-        "codesniffer": "phpcs --standard=PSR2 src",
+        "cs-check": "phpcs --standard=PSR2 src",
         "stan": "phpstan analyse"
     }
 }
