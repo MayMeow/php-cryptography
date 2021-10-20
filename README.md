@@ -31,6 +31,8 @@ This container running as user `vscode` with uid `1000`. Start container
 docker-compose -f docker-compose.dev.yml run --rm dev-container sh
 ```
 
+or it can be used as configuration for remote PHP processor in PHPStorm.
+
 ## Usage
 
 ### Cryptographic key derivation
