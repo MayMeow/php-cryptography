@@ -3,6 +3,7 @@
 namespace MayMeow\Cryptography\Tests;
 
 use MayMeow\Cryptography\RSAParameters;
+use MayMeow\Cryptography\Tests\Tools\TestingParametersLocator;
 use MayMeow\Cryptography\Tools\RsaParametersWriter;
 use PHPUnit\Framework\TestCase;
 
@@ -23,11 +24,13 @@ class RSAParametersTest extends TestCase
     {
         $parameters = new RSAParameters();
         $parameters->generateKeys();
-        $writer = new RsaParametersWriter();
+        $locator = new TestingParametersLocator();
+
+        $writer = new RsaParametersWriter($locator);
         $writer->write($parameters);
 
-        $this->assertTrue(file_exists(KEYSTORE . DIRECTORY_SEPARATOR . 'key.pem'));
-        $this->assertTrue(file_exists(KEYSTORE . DIRECTORY_SEPARATOR . 'pubkey.pem'));
-        $this->assertTrue(file_exists(KEYSTORE . DIRECTORY_SEPARATOR . 'pass.txt'));
+        $this->assertTrue(file_exists($locator->locatePrivateKey()));
+        $this->assertTrue(file_exists($locator->locatePublicKey()));
+        $this->assertTrue(file_exists($locator->locatePassphrase()));
     }
 }
