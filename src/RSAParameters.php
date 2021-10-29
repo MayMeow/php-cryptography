@@ -31,6 +31,8 @@ class RSAParameters
 
         if ($passphrase != null) {
             $this->passphrase = $passphrase;
+        } else {
+            $this->passphrase = (string)rand(100000, 999999);
         }
 
         if ($keys) {
@@ -48,6 +50,8 @@ class RSAParameters
     }
 
     /**
+     * Returns Decrypted Key
+     *
      * @return string|\OpenSSLAsymmetricKey
      * @throws DecryptPrivateKeyException
      */
