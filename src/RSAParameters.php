@@ -72,9 +72,11 @@ class RSAParameters
 
     /**
      * @param string $privateKey
+     * @param string $passphrase
      */
-    public function setPrivateKey(string $privateKey): void
+    public function setPrivateKey(string $privateKey, string $passphrase): void
     {
+        $this->passphrase = $passphrase;
         $this->privateKey = $privateKey;
     }
 
