@@ -15,6 +15,8 @@ class RsaParametersReader implements RsaParametersReaderInterface
     }
 
     /**
+     * Read RSA Parameters parts from file
+     *
      * @return RSAParameters
      * @throws FileReadException
      */

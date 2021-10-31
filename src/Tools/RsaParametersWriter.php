@@ -23,6 +23,8 @@ class RsaParametersWriter implements RsaParametersWriterInterface
     }
 
     /**
+     * Write Parameters to the file
+     *
      * @param RSAParameters $RSAParameters
      * @throws \MayMeow\Cryptography\Exceptions\DecryptPrivateKeyException
      */

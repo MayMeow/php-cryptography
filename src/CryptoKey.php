@@ -11,7 +11,7 @@ class CryptoKey
     }
 
     /**
-     * Derivate cryptographic key from given password
+     * Derive cryptographic key from given password
      *
      * @param string $password
      * @param string $salt
