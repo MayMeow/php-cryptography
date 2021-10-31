@@ -79,8 +79,45 @@ $rsa->setParameters($parameters);
 $encryptedTest = $rsa->encrypt($plainText);
 
 $decryptedText = $rsa->decrypt($encryptedTest);
-
 ```
+
+### Exporting and importing keys
+
+To use keys for later in case of encrypt/decrypt data is important to store them on some place. For this I created Readers
+and Writers. To export keys use Writer as example shows bellow:
+
+```php
+ $parameters = new RSAParameters();
+$parameters->generateKeys();
+$locator = new TestingParametersLocator();
+
+$writer = new RsaParametersWriter($locator);
+$writer->write($parameters);
+```
+If you want implement own Writers they must implement `MayMeow\Cryptography\Tools\RsaParametersWriterInterface`.
+
+Importing keys can be done as on example below:
+
+```php
+$reader = new RsaParametersReader($locator);
+$parameters2 = $reader->read();
+
+$csp2 = new RSACryptoServiceProvider();
+$csp2->setParameters($parameters2);
+```
+
+Like on writers you can implement your own Readers too. If you do so your new reader have to implement
+`MayMeow\Cryptography\Tools\RsaParametersReaderInterface`
+
+### Locators
+
+Both reader and writer in above example is using Locator. Locators are classes which can return string representation
+of location where are stored RSAParameters parts. This can be database table, model, table field, path in filesystem
+and more. Interfaces for Reader and Writer not required to use one, but I recommend it.
+
+If you want implement your own locator, this has to implement `MayMeow\Cryptography\Tools\RSAParametersLocatorInterface`.
+
+As example, you can check Tools in test folder.
 
 ### Cryptographic key derivation
 

@@ -58,6 +58,7 @@ class AESCryptoServiceProvider
     /**
      * Generate key
      *
+     * @todo Change return type to string only, throw exception instead
      * @return bool|string
      */
     public function generateKey()
@@ -76,6 +77,7 @@ class AESCryptoServiceProvider
     /**
      * Generate IV
      *
+     * @todo Change return type to string only, throw exception instead
      * @return bool|string
      */
     public function generateIV()

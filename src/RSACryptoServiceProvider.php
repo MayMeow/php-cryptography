@@ -3,6 +3,7 @@
 namespace MayMeow\Cryptography;
 
 use MayMeow\Cryptography\Exceptions\NotImplementedException;
+use MayMeow\Cryptography\Tools\RsaParametersReaderInterface;
 
 class RSACryptoServiceProvider
 {
@@ -42,6 +43,8 @@ class RSACryptoServiceProvider
     }
 
     /**
+     * Encrypt data with pricate key
+     *
      * @param string $plainText
      * @return string
      */
@@ -56,6 +59,8 @@ class RSACryptoServiceProvider
     }
 
     /**
+     * Decrypt data with public key
+     *
      * @param string $encryptedText
      * @return string
      */
@@ -84,6 +89,8 @@ class RSACryptoServiceProvider
     }
 
     /**
+     * Sign data with key and return signature
+     *
      * @param string $data
      * @return string
      */
@@ -97,6 +104,8 @@ class RSACryptoServiceProvider
     }
 
     /**
+     * Verify if signed data are same as in time of create signature
+     *
      * @param string $data
      * @param string $signature
      * @return bool
@@ -128,8 +137,13 @@ class RSACryptoServiceProvider
     }
 
     /**
+     * Returns private key
+     *
      * @return \OpenSSLAsymmetricKey|string
      * @throws Exceptions\DecryptPrivateKeyException
+     *
+     * @deprecated Passphrase can be set with setting private key instead
+     * @see RsaParameters::setPrivateKey()
      */
     private function getPrivateKey() : \OpenSSLAsymmetricKey|string
     {

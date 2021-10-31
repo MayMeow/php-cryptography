@@ -21,6 +21,8 @@ class RSAParameters
     }
 
     /**
+     * Generate keypair and passphrase to decrypt private key
+     *
      * @param string|null $passphrase
      * @param array|null $configArgs
      * @return $this
@@ -71,14 +73,20 @@ class RSAParameters
     }
 
     /**
+     * Set private key from string representation and its passphrase
+     *
      * @param string $privateKey
+     * @param string $passphrase
      */
-    public function setPrivateKey(string $privateKey): void
+    public function setPrivateKey(string $privateKey, string $passphrase): void
     {
+        $this->passphrase = $passphrase;
         $this->privateKey = $privateKey;
     }
 
     /**
+     * Returns public key as string
+     *
      * @return string
      */
     public function getPublicKey() : string
@@ -87,6 +95,8 @@ class RSAParameters
     }
 
     /**
+     * Set public key from string representation
+     *
      * @param string $publicKey
      */
     public function setPublicKey(string $publicKey): void
@@ -95,6 +105,8 @@ class RSAParameters
     }
 
     /**
+     * Returns passphrase for private key decryption
+     *
      * @return string
      */
     public function getPassphrase(): string
@@ -103,6 +115,8 @@ class RSAParameters
     }
 
     /**
+     * Set passphrase for private key
+     *
      * @param string $passphrase
      * @return $this
      */
