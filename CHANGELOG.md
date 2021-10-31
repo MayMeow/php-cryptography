@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased](https://github.com/maymeow/php-cryptography/tree/HEAD)
+## [v1.0.0](https://github.com/maymeow/php-cryptography/tree/v1.0.0) (2021-10-31)
 
-[Full Changelog](https://github.com/maymeow/php-cryptography/compare/c0f4aded5b4196e7686f32ee84f6fd8651a753df...HEAD)
+[Full Changelog](https://github.com/maymeow/php-cryptography/compare/c0f4aded5b4196e7686f32ee84f6fd8651a753df...v1.0.0)
 
 **Implemented enhancements:**
 
@@ -14,6 +14,7 @@
 
 **Merged pull requests:**
 
+- Implement ability to export and import RSA Parameters [\#10](https://github.com/MayMeow/php-cryptography/pull/10) ([MayMeow](https://github.com/MayMeow))
 - Update to using php 8 [\#9](https://github.com/MayMeow/php-cryptography/pull/9) ([MayMeow](https://github.com/MayMeow))
 - :wrench: add phpstan [\#6](https://github.com/MayMeow/php-cryptography/pull/6) ([MayMeow](https://github.com/MayMeow))
 - Update rsacsp [\#5](https://github.com/MayMeow/php-cryptography/pull/5) ([MayMeow](https://github.com/MayMeow))
