@@ -24,12 +24,15 @@
     "require-dev": {
         "phpunit/phpunit": "^9.5",
         "squizlabs/php_codesniffer": "^3.6",
-        "phpstan/phpstan": "^0.12.99"
+        "phpstan/phpstan": "^0.12.99",
+        "pheromone/phpcs-security-audit": "^2.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1"
     },
     "scripts": {
         "test": "phpunit tests",
         "cs-check": "phpcs --standard=PSR2 src",
         "cs-fix": "phpcbf --standard=PSR2 src",
+        "cs-audit": "phpcs --extensions=php,inc,lib,module,info --standard=./vendor/pheromone/phpcs-security-audit/example_base_ruleset.xml src",
         "stan": "phpstan analyse"
     }
 }
