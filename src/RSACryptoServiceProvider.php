@@ -73,22 +73,6 @@ class RSACryptoServiceProvider
     }
 
     /**
-     * @param string $plain_text
-     * @return string
-     */
-    protected function seal(string $plain_text): string
-    {
-        //openssl_open($plain_text, $sealed_data, $ekeys, [$this->parameters->getPrivateKey()])
-
-        throw new NotImplementedException();
-    }
-
-    protected function open(): string
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
      * Sign data with key and return signature
      *
      * @param string $data
