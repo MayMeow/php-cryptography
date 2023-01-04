@@ -80,8 +80,12 @@ class AESCryptoServiceProvider
      * @todo Change return type to string only, throw exception instead
      * @return bool|string
      */
-    public function generateIV()
+    public function generateIV(?string $cipher = null)
     {
+        if ($cipher != null) {
+            $this->cipher = strtolower($cipher);
+        }
+
         if (in_array($this->cipher, openssl_get_cipher_methods())) {
             if ($ivLength = openssl_cipher_iv_length($this->cipher)) {
                 if ($iv = openssl_random_pseudo_bytes($ivLength)) {
@@ -91,6 +95,8 @@ class AESCryptoServiceProvider
 
             return $this->iv;
         }
+
+        var_dump('Eroro');
 
         return false;
     }
@@ -153,5 +159,65 @@ class AESCryptoServiceProvider
         }
 
         return  $decryptedText;
+    }
+
+    /**
+     * Seal data using AES-256-CBC and public key
+     *
+     * @param string $plain_text
+     * @param RSAParameters $rSAParameters
+     * @return array Sealed data [1] and encrypted key [0]
+     */
+    public function seal(string $plain_text, RSAParameters $rSAParameters, bool $humanReadableData = false): array
+    {
+        $this->generateIV('aes-256-cbc');
+
+        openssl_seal($plain_text, $sealed_data, $ekeys, [$rSAParameters->getPublicKey()], 'aes-256-cbc', $this->iv);
+
+        $sealed_data = $this->iv . $sealed_data;
+
+        if ($humanReadableData) {
+            return [
+                base64_encode($ekeys[0]),
+                base64_encode($sealed_data)
+            ];
+        };
+
+        return [
+            $ekeys[0],
+            $sealed_data
+        ];
+    }
+
+    /**
+     * open function using AES-256-CBC and private key
+     *
+     * @param string $sealed_data
+     * @param string $ekeys
+     * @param RSAParameters $rSAParameters
+     * @return string Opened data
+     */
+    public function open(string $sealed_data, string $ekeys, RSAParameters $rSAParameters): string
+    {
+        if (preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $sealed_data)) {
+            $sealed_data = base64_decode($sealed_data);
+        }
+
+        if (preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $ekeys)) {
+            $ekeys = base64_decode($ekeys);
+        }
+
+        if ($ivLength =  openssl_cipher_iv_length('aes-256-cbc')) {
+            $iv_len = $ivLength;
+        } else {
+            throw new IvGenerateException();
+        }
+
+        $iv = substr($sealed_data, 0, $iv_len);
+        $encryptedData = substr($sealed_data, $iv_len);
+        
+        openssl_open($encryptedData, $open_data, $ekeys, $rSAParameters->getPrivateKey(), 'aes-256-cbc', $iv);
+
+        return $open_data;
     }
 }
