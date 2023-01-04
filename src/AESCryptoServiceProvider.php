@@ -164,9 +164,13 @@ class AESCryptoServiceProvider
     /**
      * Seal data using AES-256-CBC and public key
      *
+     * Sealed data are array that contains encrypted data [1] and encrypted key [0]
+     * encrypted data also contains IV
+     *
      * @param string $plain_text
      * @param RSAParameters $rSAParameters
-     * @return array Sealed data [1] and encrypted key [0]
+     * @param bool $humanReadableData whether to return base64 encoded data
+     * @return array Sealed data
      */
     public function seal(string $plain_text, RSAParameters $rSAParameters, bool $humanReadableData = false): array
     {
@@ -215,7 +219,7 @@ class AESCryptoServiceProvider
 
         $iv = substr($sealed_data, 0, $iv_len);
         $encryptedData = substr($sealed_data, $iv_len);
-        
+
         openssl_open($encryptedData, $open_data, $ekeys, $rSAParameters->getPrivateKey(), 'aes-256-cbc', $iv);
 
         return $open_data;
