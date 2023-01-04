@@ -129,11 +129,6 @@ $p->getCryptograhicKey($password, $salt);
 
 ## Contribute
 
-Feel free to contribute to this project. All contributions must have:
-
-- Created Issue - describe what you want to add or change
-- pull requests has to be linked to this issue, Describe there what you chaning / adding
-- Do not make big changes in one pull request. Keep it simple and clean and rather make another pull request for more changes.
-- Pull requests must pass all checks.
+Feel free to contribute to this project. For contribution guide please check https://github.com/MayMeow/contribution
 
 License MIT
