@@ -10,7 +10,7 @@ interface RSAParametersLocatorInterface
      *
      * @return string
      */
-    public function locatePrivateKey() : string;
+    public function locatePrivateKey(): string;
 
     /**
      * Returns string representation of location for public key
@@ -18,7 +18,7 @@ interface RSAParametersLocatorInterface
      *
      * @return string
      */
-    public function locatePublicKey() : string;
+    public function locatePublicKey(): string;
 
     /**
      * Returns string representation of location for passphrase
@@ -26,5 +26,5 @@ interface RSAParametersLocatorInterface
      *
      * @return string
      */
-    public function locatePassphrase() : string;
+    public function locatePassphrase(): string;
 }

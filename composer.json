@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-        "php": "8.0.*",
+        "php": "~8.0",
         "ext-openssl": "*"
     },
     "require-dev": {
@@ -30,9 +30,8 @@
     },
     "scripts": {
         "test": "phpunit tests",
-        "cs-check": "phpcs --standard=PSR2 src",
-        "cs-fix": "phpcbf --standard=PSR2 src",
-        "cs-audit": "phpcs --extensions=php,inc,lib,module,info --standard=./vendor/pheromone/phpcs-security-audit/example_base_ruleset.xml src",
+        "cs-check": "phpcs --standard=PSR12 src",
+        "cs-fix": "phpcbf --standard=PSR12 src",
         "stan": "phpstan analyse"
     }
 }

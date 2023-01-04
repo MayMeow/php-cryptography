@@ -7,8 +7,8 @@ use MayMeow\Cryptography\Exceptions\IvGenerateException;
 
 class AESCryptoServiceProvider
 {
-    const CIPHER_TYPE_GCM = 'aes-256-gcm';
-    const DEFAULT_GCM_TAG_LENGTH = 16;
+    public const CIPHER_TYPE_GCM = 'aes-256-gcm';
+    public const DEFAULT_GCM_TAG_LENGTH = 16;
 
     protected string $cipher;
 

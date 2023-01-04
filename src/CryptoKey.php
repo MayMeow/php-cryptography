@@ -1,11 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace MayMeow\Cryptography;
 
 class CryptoKey
 {
-    public function helloWorld() : string
+    public function helloWorld(): string
     {
         return "Hello World";
     }
@@ -24,7 +25,7 @@ class CryptoKey
         string $salt = '',
         int $iterations = 1024,
         int $length = 48
-    ) : string {
+    ): string {
         return hash_pbkdf2("sha256", $password, $salt, $iterations, $length);
     }
 }

@@ -20,7 +20,7 @@ class RsaParametersReader implements RsaParametersReaderInterface
      * @return RSAParameters
      * @throws FileReadException
      */
-    public function read() : RSAParameters
+    public function read(): RSAParameters
     {
         $rsaParameters = new RSAParameters();
 
