@@ -20,7 +20,7 @@ class RSACryptoServiceProvider
     /**
      * encrypt file with public key
      */
-    public function encrypt(string $plainText) : string
+    public function encrypt(string $plainText): string
     {
         $encrypted = '';
 
@@ -32,7 +32,7 @@ class RSACryptoServiceProvider
     /**
      * decrypt with private key
      */
-    public function decrypt(string $encryptedText) : string
+    public function decrypt(string $encryptedText): string
     {
         $plainText = '';
         $privKey = $this->parameters->getPrivateKey();
@@ -48,7 +48,7 @@ class RSACryptoServiceProvider
      * @param string $plainText
      * @return string
      */
-    public function privateEncrypt(string $plainText) : string
+    public function privateEncrypt(string $plainText): string
     {
         $encrypted = '';
         $privKey = $this->parameters->getPrivateKey();
@@ -64,7 +64,7 @@ class RSACryptoServiceProvider
      * @param string $encryptedText
      * @return string
      */
-    public function publicDecrypt(string $encryptedText) : string
+    public function publicDecrypt(string $encryptedText): string
     {
         $plainText = '';
         openssl_public_decrypt(base64_decode($encryptedText), $plainText, $this->parameters->getPublicKey());
@@ -76,14 +76,14 @@ class RSACryptoServiceProvider
      * @param string $plain_text
      * @return string
      */
-    protected function seal(string $plain_text) : string
+    protected function seal(string $plain_text): string
     {
         //openssl_open($plain_text, $sealed_data, $ekeys, [$this->parameters->getPrivateKey()])
 
         throw new NotImplementedException();
     }
 
-    protected function open() : string
+    protected function open(): string
     {
         throw new NotImplementedException();
     }
@@ -94,7 +94,7 @@ class RSACryptoServiceProvider
      * @param string $data
      * @return string
      */
-    public function sign(string $data) : string
+    public function sign(string $data): string
     {
         $privKey = $this->getPrivateKey();
 
@@ -110,7 +110,7 @@ class RSACryptoServiceProvider
      * @param string $signature
      * @return bool
      */
-    public function verify(string $data, string $signature) : bool
+    public function verify(string $data, string $signature): bool
     {
         $verification = openssl_verify(
             $data,
@@ -127,7 +127,7 @@ class RSACryptoServiceProvider
      *
      * @return string
      */
-    public function getFingerPrint(string $publicKey = null) : string
+    public function getFingerPrint(string $publicKey = null): string
     {
         if ($publicKey == null) {
             $publicKey = $this->parameters->getPublicKey();
@@ -145,7 +145,7 @@ class RSACryptoServiceProvider
      * @deprecated Passphrase can be set with setting private key instead
      * @see RsaParameters::setPrivateKey()
      */
-    private function getPrivateKey() : \OpenSSLAsymmetricKey|string
+    private function getPrivateKey(): \OpenSSLAsymmetricKey|string
     {
         return $this->parameters->getPrivateKey();
     }

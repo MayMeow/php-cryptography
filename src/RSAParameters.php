@@ -27,7 +27,7 @@ class RSAParameters
      * @param array|null $configArgs
      * @return $this
      */
-    public function generateKeys(?string $passphrase = null, ?array $configArgs = null) : RSAParameters
+    public function generateKeys(?string $passphrase = null, ?array $configArgs = null): RSAParameters
     {
         $keys = openssl_pkey_new($this->config);
 
@@ -57,7 +57,7 @@ class RSAParameters
      * @return string|\OpenSSLAsymmetricKey
      * @throws DecryptPrivateKeyException
      */
-    public function getPrivateKey() : \OpenSSLAsymmetricKey|string
+    public function getPrivateKey(): \OpenSSLAsymmetricKey|string
     {
         if ($this->passphrase != null && $this->privateKey != null) {
             $privateKeyResource = openssl_pkey_get_private($this->privateKey, $this->passphrase);
@@ -89,7 +89,7 @@ class RSAParameters
      *
      * @return string
      */
-    public function getPublicKey() : string
+    public function getPublicKey(): string
     {
         return $this->publicKey;
     }
