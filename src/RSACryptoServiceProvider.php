@@ -111,7 +111,7 @@ class RSACryptoServiceProvider
      *
      * @return string
      */
-    public function getFingerPrint(string $publicKey = null): string
+    public function getFingerPrint(?string $publicKey = null): string
     {
         if ($publicKey == null) {
             $publicKey = $this->parameters->getPublicKey();
