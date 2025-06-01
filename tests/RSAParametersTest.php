@@ -56,4 +56,3 @@ class RSAParametersTest extends TestCase
         $this->assertEquals($text, $csp2->decrypt($encryptedText));
     }
 }
-
