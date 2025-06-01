@@ -142,4 +142,23 @@ class RSAParameters
     {
         $this->config = $config;
     }
+
+    /**
+     * Returns the fingerprint of the public key.
+     *
+     * @param bool $md5 Whether to return the MD5 fingerprint instead of SHA-256.
+     * @return string The fingerprint of the public key.
+     */
+    public function getFingerprint(bool $md5 = false): string
+    {
+        $derData = preg_replace('/-----.*?-----/', '', base64_decode($this->publicKey));
+        $derData = preg_replace('/\s+/', '', $derData);
+        $derData = base64_decode($derData);
+
+        if ($md5) {
+            return implode(':', str_split(hash('md5', $derData), 2));
+        }
+
+        return hash('sha256', $derData);
+    }
 }
