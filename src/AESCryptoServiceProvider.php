@@ -168,7 +168,11 @@ class AESCryptoServiceProvider
      * @param bool $humanReadableData whether to return base64 encoded data
      * @return array Sealed data
      */
-    public function seal(string $plain_text, RSAParameters $rSAParameters, bool $humanReadableData = false): array
+    public function seal(
+        string $plain_text,
+        RSAParameters $rSAParameters,
+        bool $humanReadableData = false
+        ): array
     {
         $this->generateIV('aes-256-cbc');
 
@@ -197,7 +201,8 @@ class AESCryptoServiceProvider
      * @param RSAParameters $rSAParameters
      * @return string Opened data
      */
-    public function open(string $sealed_data, string $ekeys, RSAParameters $rSAParameters): string
+    public function open(string $sealed_data, string $ekeys, RSAParameters $rSAParameters, string $privateKeyPass,
+        string $salt): string
     {
         if (preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $sealed_data)) {
             $sealed_data = base64_decode($sealed_data);
@@ -216,7 +221,7 @@ class AESCryptoServiceProvider
         $iv = substr($sealed_data, 0, $iv_len);
         $encryptedData = substr($sealed_data, $iv_len);
 
-        openssl_open($encryptedData, $open_data, $ekeys, $rSAParameters->getPrivateKey(), 'aes-256-cbc', $iv);
+        openssl_open($encryptedData, $open_data, $ekeys, $rSAParameters->getPrivateKey(passphrase: $privateKeyPass, salt: $salt), 'aes-256-cbc', $iv);
 
         return $open_data;
     }
