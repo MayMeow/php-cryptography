@@ -9,5 +9,5 @@ interface RsaParametersWriterInterface
     /**
      * Write parameters to given location
      */
-    public function write(RSAParameters $RSAParameters): void;
+    public function write(RSAParameters $RSAParameters, string $privateKeyPass, string $salt): void;
 }

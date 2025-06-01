@@ -11,12 +11,14 @@ use PHPUnit\Framework\TestCase;
 
 class RSAParametersTest extends TestCase
 {
-
+    protected string $salt = 'salt';
+    protected string $passphrase = 'passphrase';
+    
     /** @test */
     public function canGenerateKeys() :void
     {
         $parameters = new RSAParameters();
-        $keys =  $parameters->generateKeys();
+        $keys =  $parameters->generateKeys(passphrase: $this->passphrase, salt: $this->salt);
 
         $this->assertInstanceOf(RSAParameters::class, $keys);
     }
@@ -25,11 +27,11 @@ class RSAParametersTest extends TestCase
     public function canExportKeysAndImportToFile() : void
     {
         $parameters = new RSAParameters();
-        $parameters->generateKeys();
+        $parameters->generateKeys(passphrase: $this->passphrase, salt: $this->salt);
         $locator = new TestingParametersLocator();
 
         $writer = new RsaParametersWriter($locator);
-        $writer->write($parameters);
+        $writer->write($parameters, privateKeyPass: $this->passphrase, salt: $this->salt);
 
         // Assert if exported files are on disk
         $this->assertTrue(file_exists($locator->locatePrivateKey()));
@@ -53,6 +55,6 @@ class RSAParametersTest extends TestCase
         $csp2->setParameters($parameters2);
 
         // Check if imported parameters are same as parameters that was exported
-        $this->assertEquals($text, $csp2->decrypt($encryptedText));
+        $this->assertEquals($text, $csp2->decrypt($encryptedText, privateKeyPass: $this->passphrase, salt: $this->salt));
     }
 }

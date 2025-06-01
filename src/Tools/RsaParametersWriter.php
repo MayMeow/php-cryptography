@@ -28,10 +28,14 @@ class RsaParametersWriter implements RsaParametersWriterInterface
      * @param RSAParameters $RSAParameters
      * @throws \MayMeow\Cryptography\Exceptions\DecryptPrivateKeyException
      */
-    public function write(RSAParameters $RSAParameters): void
+    public function write(RSAParameters $RSAParameters, string $privateKeyPass, string $salt): void
     {
         file_put_contents($this->locator->locatePublicKey(), $RSAParameters->getPublicKey());
-        file_put_contents($this->locator->locatePrivateKey(), $RSAParameters->getPrivateKey(encrypted: true));
-        file_put_contents($this->locator->locatePassphrase(), $RSAParameters->getPassphrase());
+        file_put_contents($this->locator->locatePrivateKey(), $RSAParameters->getPrivateKey(
+            encrypted: true,
+            passphrase: $privateKeyPass,
+            salt: $salt
+        ));
+        file_put_contents($this->locator->locatePassphrase(), $privateKeyPass);
     }
 }
