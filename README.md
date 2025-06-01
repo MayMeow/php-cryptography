@@ -44,22 +44,23 @@ This package replaces https://github.com/MayMeow/php-encrypt
 2. **Quick fix: Explicitly use RSA keys** (maintains old behavior)
 
 ```php
-// Option 1: AES hybrid encryption (recommended)
-$ecParams = new RSAParameters(); // Uses EC by default
-$ecParams->generateKeys($passphrase);
-$aes = new AESCryptoServiceProvider();
-$sealed = $aes->seal($plaintext, $ecParams);
-
-// Option 2: Explicit RSA for encryption (quick fix)
+// Option 1: Use RSA for AES hybrid encryption (current limitation)
 $rsaParams = new RSAParameters();
 $rsaConfig = [
     'private_key_type' => OPENSSL_KEYTYPE_RSA,
     'private_key_bits' => 2048
 ];
 $rsaParams->generateKeys($passphrase, $rsaConfig);
+$aes = new AESCryptoServiceProvider();
+$sealed = $aes->seal($plaintext, $rsaParams);
+
+// Option 2: Explicit RSA for direct encryption 
 $rsa = new RSACryptoServiceProvider();
+$rsa->setParameters($rsaParams);
 $encrypted = $rsa->encrypt($plaintext);
 ```
+
+**Note**: The current `AESCryptoServiceProvider::seal()` method uses `openssl_seal()` which only supports RSA keys. EC-compatible hybrid encryption would require ECDH key exchange implementation.
 
 ### New EC Classes Available
 ```php
@@ -155,18 +156,19 @@ $encryptedText = $rsa->encrypt($plainText);
 $decryptedText = $rsa->decrypt($encryptedText, "passphrase", "salt");
 ```
 
-#### Hybrid Encryption (Recommended for EC Keys)
+#### Hybrid Encryption (Future Enhancement)
 
-For EC keys, use AES hybrid encryption which is more secure and efficient:
+**Note**: Current AES seal/open requires RSA keys. For EC-compatible hybrid encryption:
 
 ```php
-$plainText = "This is going to be encrypted with hybrid approach!";
-$parameters = new RSAParameters();
-$parameters->generateKeys("passphrase"); // Uses EC by default
+// Current: Use RSA for hybrid encryption
+$rsaParams = new RSAParameters();
+$rsaConfig = ['private_key_type' => OPENSSL_KEYTYPE_RSA, 'private_key_bits' => 2048];
+$rsaParams->generateKeys("passphrase", $rsaConfig, "salt");
 
 $aes = new AESCryptoServiceProvider();
-$sealed = $aes->seal($plainText, $parameters, humanReadableData: true);
-$opened = $aes->open($sealed[1], $sealed[0], $parameters, "passphrase", "salt");
+$sealed = $aes->seal($plainText, $rsaParams, humanReadableData: true);
+$opened = $aes->open($sealed[1], $sealed[0], $rsaParams, "passphrase", "salt");
 ```
 
 #### Using Dedicated EC Classes
