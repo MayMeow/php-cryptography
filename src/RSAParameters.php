@@ -11,7 +11,7 @@ class RSAParameters
     private string $passphrase;
 
     protected array $config = [
-        'digest_alg' => 'sha512',
+        'digest_alg' => 'sha256',
         'private_key_bits' => 4096,
         'private_key_type' => OPENSSL_KEYTYPE_RSA,
     ];
