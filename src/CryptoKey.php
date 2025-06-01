@@ -22,9 +22,9 @@ class CryptoKey
      */
     public function getCryptographicKey(
         string $password,
-        string $salt = '',
-        int $iterations = 1024,
-        int $length = 48
+        string $salt,
+        int $iterations = 100000,
+        int $length = 32
     ): string {
         return hash_pbkdf2("sha256", $password, $salt, $iterations, $length);
     }
