@@ -16,8 +16,6 @@ class AESCryptoServiceProvider
 
     protected string $key;
 
-    protected string $aad = "127.0.0.1";
-
     protected string $tag = '';
 
     public function __construct(?string $cipher = null)
