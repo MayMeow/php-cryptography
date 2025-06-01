@@ -45,7 +45,7 @@ class RSAParameters
         return $this;
     }
 
-    protected function _encryptPrivateKey(string $privateKey, string $salt = 'salt'): string
+    private function _encryptPrivateKey(string $privateKey, string $salt = 'salt'): string
     {
         $aes = new AESCryptoServiceProvider();
         $aes->generateIV();
@@ -56,7 +56,7 @@ class RSAParameters
         return $aes->encrypt($privateKey);
     }
 
-    protected function _decryptPrivateKey(string $privateKey, string $salt = 'salt'): string
+    private function _decryptPrivateKey(string $privateKey, string $salt = 'salt'): string
     {
         $aes = new AESCryptoServiceProvider();
         $k = new CryptoKey();
