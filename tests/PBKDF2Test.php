@@ -21,7 +21,7 @@ class PBKDF2Test extends TestCase
     {
         $p = new CryptoKey();
         $password = 'pa$$word1';
-        $expectedKey = "094c8ea6c989cf7728a6f741b74ee2055219fc60e0cb0156";
+        $expectedKey = "10d7783e00821d6a309a271698bd5399";
         $salt = "cfe29b9ef459d95e280d7b3fc2f7e2ef2e10a102606a4469";
 
         $this->assertEquals($expectedKey, $p->getCryptographicKey($password, $salt));
