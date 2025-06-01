@@ -16,11 +16,9 @@ class AESCryptoServiceProvider
 
     protected string $key;
 
-    protected string $aad = "127.0.0.1";
-
     protected string $tag = '';
 
-    public function __construct(string $cipher = null)
+    public function __construct(?string $cipher = null)
     {
         if ($cipher == null) {
             $this->cipher = static::CIPHER_TYPE_GCM;
@@ -115,8 +113,7 @@ class AESCryptoServiceProvider
             $this->key,
             OPENSSL_RAW_DATA,
             $this->iv,
-            $this->tag,
-            $this->aad
+            $this->tag
         );
 
         return base64_encode($this->iv . $this->tag . $encryptedBytes);
@@ -150,8 +147,7 @@ class AESCryptoServiceProvider
             $this->key,
             OPENSSL_RAW_DATA,
             $this->iv,
-            $this->tag,
-            $this->aad
+            $this->tag
         );
 
         if ($decryptedText == false) {
