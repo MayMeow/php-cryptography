@@ -148,7 +148,6 @@ class AESCryptoServiceProvider
             OPENSSL_RAW_DATA,
             $this->iv,
             $this->tag
-            //$this->aad
         );
 
         if ($decryptedText == false) {
