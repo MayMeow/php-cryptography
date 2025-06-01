@@ -33,7 +33,7 @@ class RSAParameters
 
         if ($keys) {
             openssl_pkey_export($keys, $private);
-            $this->privateKey = $this->_encryptPrivateKey(privateKey: $private);
+            $this->privateKey = $this->encryptPrivateKey(privateKey: $private);
 
             $pub = openssl_pkey_get_details($keys);
 
@@ -45,7 +45,7 @@ class RSAParameters
         return $this;
     }
 
-    private function _encryptPrivateKey(string $privateKey, string $salt = 'salt'): string
+    private function encryptPrivateKey(string $privateKey, string $salt = 'salt'): string
     {
         $aes = new AESCryptoServiceProvider();
         $aes->generateIV();
@@ -56,7 +56,7 @@ class RSAParameters
         return $aes->encrypt($privateKey);
     }
 
-    private function _decryptPrivateKey(string $privateKey, string $salt = 'salt'): string
+    private function decryptPrivateKey(string $privateKey, string $salt = 'salt'): string
     {
         $aes = new AESCryptoServiceProvider();
         $k = new CryptoKey();
@@ -75,7 +75,7 @@ class RSAParameters
     public function getPrivateKey(string $salt = 'salt', bool $encrypted = false): \OpenSSLAsymmetricKey|string
     {
         if (!$encrypted) {
-            return $this->_decryptPrivateKey(
+            return $this->decryptPrivateKey(
                 privateKey: $this->privateKey,
                 salt: $salt
             );
