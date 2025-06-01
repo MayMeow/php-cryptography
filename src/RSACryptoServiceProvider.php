@@ -18,10 +18,27 @@ class RSACryptoServiceProvider
     }
 
     /**
+     * Determine if the current parameters use EC keys
+     */
+    private function isECKey(): bool
+    {
+        $config = $this->parameters->getConfig();
+        return isset($config['private_key_type']) && $config['private_key_type'] === OPENSSL_KEYTYPE_EC;
+    }
+
+    /**
      * encrypt file with public key
+     * Note: Direct encryption only works with RSA keys. For EC keys, use hybrid encryption with AES.
      */
     public function encrypt(string $plainText): string
     {
+        if ($this->isECKey()) {
+            throw new Exceptions\NotImplementedException(
+                'Direct encryption is not supported with EC keys. ' .
+                'Use AES encryption with ECDH key exchange for hybrid encryption instead.'
+            );
+        }
+
         $encrypted = '';
 
         openssl_public_encrypt($plainText, $encrypted, $this->parameters->getPublicKey());
@@ -31,9 +48,17 @@ class RSACryptoServiceProvider
 
     /**
      * decrypt with private key
+     * Note: Direct decryption only works with RSA keys. For EC keys, use hybrid encryption with AES.
      */
     public function decrypt(string $encryptedText, string $privateKeyPass, string $salt): string
     {
+        if ($this->isECKey()) {
+            throw new Exceptions\NotImplementedException(
+                'Direct decryption is not supported with EC keys. ' .
+                'Use AES decryption with ECDH key exchange for hybrid encryption instead.'
+            );
+        }
+
         $plainText = '';
         $privKey = $this->parameters->getPrivateKey(passphrase: $privateKeyPass, salt: $salt);
 
@@ -43,13 +68,18 @@ class RSACryptoServiceProvider
     }
 
     /**
-     * Encrypt data with pricate key
-     *
-     * @param string $plainText
-     * @return string
+     * Encrypt data with private key
+     * Note: Private encryption only works with RSA keys. For EC keys, use digital signatures instead.
      */
     public function privateEncrypt(string $plainText, string $privateKeyPass, string $salt): string
     {
+        if ($this->isECKey()) {
+            throw new Exceptions\NotImplementedException(
+                'Private encryption is not supported with EC keys. ' .
+                'EC keys are designed for digital signatures. Use sign() method instead.'
+            );
+        }
+
         $encrypted = '';
         $privKey = $this->parameters->getPrivateKey(passphrase: $privateKeyPass, salt: $salt);
 
@@ -60,12 +90,17 @@ class RSACryptoServiceProvider
 
     /**
      * Decrypt data with public key
-     *
-     * @param string $encryptedText
-     * @return string
+     * Note: Public decryption only works with RSA keys. For EC keys, use signature verification instead.
      */
     public function publicDecrypt(string $encryptedText): string
     {
+        if ($this->isECKey()) {
+            throw new Exceptions\NotImplementedException(
+                'Public decryption is not supported with EC keys. ' .
+                'EC keys are designed for digital signatures. Use verify() method instead.'
+            );
+        }
+
         $plainText = '';
         openssl_public_decrypt(base64_decode($encryptedText), $plainText, $this->parameters->getPublicKey());
 
@@ -82,7 +117,9 @@ class RSACryptoServiceProvider
     {
         $privKey = $this->parameters->getPrivateKey(passphrase: $privateKeyPass, salt: $salt);
 
-        $result = openssl_sign($data, $signature, $privKey, OPENSSL_ALGO_SHA512);
+        // Use SHA256 for EC keys, SHA512 for RSA keys
+        $algorithm = $this->isECKey() ? OPENSSL_ALGO_SHA256 : OPENSSL_ALGO_SHA512;
+        $result = openssl_sign($data, $signature, $privKey, $algorithm);
 
         return base64_encode($signature);
     }
@@ -96,11 +133,14 @@ class RSACryptoServiceProvider
      */
     public function verify(string $data, string $signature): bool
     {
+        // Use SHA256 for EC keys, SHA512 for RSA keys
+        $algorithm = $this->isECKey() ? OPENSSL_ALGO_SHA256 : OPENSSL_ALGO_SHA512;
+        
         $verification = openssl_verify(
             $data,
             base64_decode($signature),
             $this->parameters->getPublicKey(),
-            OPENSSL_ALGO_SHA512
+            $algorithm
         );
 
         return (bool)$verification;
