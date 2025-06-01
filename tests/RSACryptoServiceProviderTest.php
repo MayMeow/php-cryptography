@@ -17,7 +17,13 @@ class RSACryptoServiceProviderTest extends TestCase
     {
         $plainText = "This is going to be encrypted!";
         $parameters = new RSAParameters();
-        $parameters->generateKeys(passphrase: $this->passphrase, salt: $this->salt);
+        
+        // Explicitly use RSA for encryption test
+        $rsaConfig = [
+            'private_key_type' => OPENSSL_KEYTYPE_RSA,
+            'private_key_bits' => 2048
+        ];
+        $parameters->generateKeys(passphrase: $this->passphrase, configArgs: $rsaConfig, salt: $this->salt);
 
         $rsa = new RSACryptoServiceProvider();
         $rsa->setParameters($parameters);

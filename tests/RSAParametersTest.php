@@ -24,10 +24,27 @@ class RSAParametersTest extends TestCase
     }
 
     /** @test */
-    public function canExportKeysAndImportToFile() : void
+    public function defaultKeyGenerationUsesEC(): void
     {
         $parameters = new RSAParameters();
         $parameters->generateKeys(passphrase: $this->passphrase, salt: $this->salt);
+        
+        $config = $parameters->getConfig();
+        $this->assertEquals(OPENSSL_KEYTYPE_EC, $config['private_key_type']);
+        $this->assertEquals('prime256v1', $config['curve_name']);
+    }
+
+    /** @test */
+    public function canExportKeysAndImportToFile() : void
+    {
+        $parameters = new RSAParameters();
+        
+        // Use RSA explicitly for encryption test  
+        $rsaConfig = [
+            'private_key_type' => OPENSSL_KEYTYPE_RSA,
+            'private_key_bits' => 2048
+        ];
+        $parameters->generateKeys(passphrase: $this->passphrase, configArgs: $rsaConfig, salt: $this->salt);
         $locator = new TestingParametersLocator();
 
         $writer = new RsaParametersWriter($locator);
