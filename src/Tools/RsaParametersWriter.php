@@ -31,12 +31,7 @@ class RsaParametersWriter implements RsaParametersWriterInterface
     public function write(RSAParameters $RSAParameters): void
     {
         file_put_contents($this->locator->locatePublicKey(), $RSAParameters->getPublicKey());
+        file_put_contents($this->locator->locatePrivateKey(), $RSAParameters->getPrivateKey(encrypted: true));
         file_put_contents($this->locator->locatePassphrase(), $RSAParameters->getPassphrase());
-
-        openssl_pkey_export_to_file(
-            $RSAParameters->getPrivateKey(),
-            $this->locator->locatePrivateKey(),
-            $RSAParameters->getPassphrase()
-        );
     }
 }
