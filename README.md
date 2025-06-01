@@ -2,6 +2,7 @@
 
 > [!IMPORTANT]
 > Upcomming Version 2.0 introduces a new minimum PHP version requirement: PHP 8.4. This is a major change that may break existing functionality in your application if you are currently running an older PHP version. I highly recommend reviewing your environment and planning for this upgrade.
+> Follow [Discussion](https://github.com/MayMeow/php-cryptography/discussions/21#discussion-8398412) for upcomming update
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/D1D5DMOTA)
 
