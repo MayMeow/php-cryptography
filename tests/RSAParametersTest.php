@@ -31,7 +31,7 @@ class RSAParametersTest extends TestCase
         
         $config = $parameters->getConfig();
         $this->assertEquals(OPENSSL_KEYTYPE_EC, $config['private_key_type']);
-        $this->assertEquals('prime256v1', $config['curve_name']);
+        $this->assertEquals('prime256v1', $config['ec']['curve_name']);
     }
 
     /** @test */

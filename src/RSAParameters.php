@@ -10,9 +10,11 @@ class RSAParameters
     private string $publicKey;
 
     protected array $config = [
-        'digest_alg' => 'sha256',
         'private_key_type' => OPENSSL_KEYTYPE_EC,
-        'curve_name' => 'prime256v1', // NIST P-256, equivalent to RSA 3072-bit security
+        'ec' => [
+            'curve_name' => 'prime256v1', // NIST P-256, equivalent to RSA 3072-bit security
+        ]
+        
     ];
 
     public function __construct()

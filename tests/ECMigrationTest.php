@@ -58,7 +58,7 @@ class ECMigrationTest extends TestCase
         $config = $params->getConfig();
         
         $this->assertEquals(OPENSSL_KEYTYPE_EC, $config['private_key_type']);
-        $this->assertEquals('prime256v1', $config['curve_name']);
+        $this->assertEquals('prime256v1', $config['ec']['curve_name']);
         $this->assertArrayNotHasKey('private_key_bits', $config);
     }
 

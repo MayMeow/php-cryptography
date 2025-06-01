@@ -60,7 +60,7 @@ class ECParametersTest extends TestCase
         $config = $parameters->getConfig();
         $this->assertIsArray($config);
         $this->assertEquals(OPENSSL_KEYTYPE_EC, $config['private_key_type']);
-        $this->assertEquals('prime256v1', $config['curve_name']);
+        $this->assertEquals('prime256v1', $config['ec']['curve_name']);
         
         // Test setting config
         $newConfig = [
@@ -79,7 +79,9 @@ class ECParametersTest extends TestCase
         $parameters = new ECParameters();
         
         $customConfig = [
-            'curve_name' => 'secp384r1'
+            'ec' => [
+                'curve_name' => 'secp384r1'
+            ]
         ];
         
         $parameters->generateKeys(
@@ -89,7 +91,7 @@ class ECParametersTest extends TestCase
         );
         
         $config = $parameters->getConfig();
-        $this->assertEquals('secp384r1', $config['curve_name']);
+        $this->assertEquals('secp384r1', $config['ec']['curve_name']);
     }
 
     /** @test */
