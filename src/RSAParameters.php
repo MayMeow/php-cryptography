@@ -8,7 +8,7 @@ class RSAParameters
 {
     private string $privateKey;
     private string $publicKey;
-    private string $passphrase;
+    private ?string $passphrase = 'test_passphrase';
 
     protected array $config = [
         'digest_alg' => 'sha256',
@@ -31,15 +31,9 @@ class RSAParameters
     {
         $keys = openssl_pkey_new($this->config);
 
-        if ($passphrase != null) {
-            $this->passphrase = $passphrase;
-        } else {
-            $this->passphrase = (string)rand(100000, 999999);
-        }
-
         if ($keys) {
-            openssl_pkey_export($keys, $private, $passphrase, $configArgs);
-            $this->privateKey = $private;
+            openssl_pkey_export($keys, $private);
+            $this->privateKey = $this->_encryptPrivateKey(privateKey: $private);
 
             $pub = openssl_pkey_get_details($keys);
 
@@ -51,22 +45,40 @@ class RSAParameters
         return $this;
     }
 
+    protected function _encryptPrivateKey(string $privateKey, string $salt = 'salt'): string
+    {
+        $aes = new AESCryptoServiceProvider();
+        $aes->generateIV();
+        $k = new CryptoKey();
+        $key = $k->getCryptographicKey($this->passphrase, $salt);
+        $aes->setKey($key);
+
+        return $aes->encrypt($privateKey);
+    }
+
+    protected function _decryptPrivateKey(string $privateKey, string $salt = 'salt'): string
+    {
+        $aes = new AESCryptoServiceProvider();
+        $k = new CryptoKey();
+        $key = $k->getCryptographicKey($this->passphrase, $salt);
+        $aes->setKey($key);
+
+        return $aes->decrypt($privateKey);
+    }
+
     /**
      * Returns Decrypted Key
      *
      * @return string|\OpenSSLAsymmetricKey
      * @throws DecryptPrivateKeyException
      */
-    public function getPrivateKey(): \OpenSSLAsymmetricKey|string
+    public function getPrivateKey(string $salt = 'salt', bool $encrypted = false): \OpenSSLAsymmetricKey|string
     {
-        if ($this->passphrase != null && $this->privateKey != null) {
-            $privateKeyResource = openssl_pkey_get_private($this->privateKey, $this->passphrase);
-
-            if ($privateKeyResource == false) {
-                throw new DecryptPrivateKeyException();
-            }
-
-            return $privateKeyResource;
+        if (!$encrypted) {
+            return $this->_decryptPrivateKey(
+                privateKey: $this->privateKey,
+                salt: $salt
+            );
         }
 
         return $this->privateKey;
@@ -78,7 +90,7 @@ class RSAParameters
      * @param string $privateKey
      * @param string $passphrase
      */
-    public function setPrivateKey(string $privateKey, string $passphrase): void
+    public function setPrivateKey(string $privateKey, string $passphrase, string $salt = 'salt'): void
     {
         $this->passphrase = $passphrase;
         $this->privateKey = $privateKey;
@@ -109,7 +121,7 @@ class RSAParameters
      *
      * @return string
      */
-    public function getPassphrase(): string
+    public function getPassphrase(): ?string
     {
         return $this->passphrase;
     }
