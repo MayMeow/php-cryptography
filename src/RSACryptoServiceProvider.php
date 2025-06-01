@@ -111,7 +111,8 @@ class RSACryptoServiceProvider
      *
      * If no public key is provided, the method will use the default public key.
      *
-     * @param string|null $publicKey The public key to generate the fingerprint for. If null, the default public key is used.
+     * @param string|null $publicKey The public key to generate the fingerprint for.
+     *                    If null, the default public key is used.
      * @return string The fingerprint of the public key.
      */
     public function getFingerPrint(?string $publicKey = null): string
