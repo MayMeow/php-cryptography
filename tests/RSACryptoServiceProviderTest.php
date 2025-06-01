@@ -9,18 +9,21 @@ use PHPUnit\Framework\TestCase;
 
 class RSACryptoServiceProviderTest extends TestCase
 {
+    protected string $salt = 'salt';
+    protected string $passphrase = 'passphrase';
+    
     /** @test */
     public function canEncryptAndDecryptText()
     {
         $plainText = "This is going to be encrypted!";
         $parameters = new RSAParameters();
-        $parameters->generateKeys("passphrase");
+        $parameters->generateKeys(passphrase: $this->passphrase, salt: $this->salt);
 
         $rsa = new RSACryptoServiceProvider();
         $rsa->setParameters($parameters);
         $encryptedTest = $rsa->encrypt($plainText);
 
-        $this->assertEquals($plainText, $rsa->decrypt($encryptedTest));
+        $this->assertEquals($plainText, $rsa->decrypt($encryptedTest, privateKeyPass: $this->passphrase, salt: $this->salt));
     }
 
     /** @test */
@@ -28,7 +31,7 @@ class RSACryptoServiceProviderTest extends TestCase
     {
         $plainText = "This is going";
         $parameters = new RSAParameters();
-        $parameters->generateKeys("passphrase");
+        $parameters->generateKeys(passphrase: $this->passphrase, salt: $this->salt);
 
         $rsa = new RSACryptoServiceProvider();
         $rsa->setParameters($parameters);
@@ -36,7 +39,7 @@ class RSACryptoServiceProviderTest extends TestCase
         $aes = new AESCryptoServiceProvider();
 
         $sealed = $aes->seal($plainText, $parameters, humanReadableData: true);
-        $opened = $aes->open($sealed[1], $sealed[0], $parameters);
+        $opened = $aes->open($sealed[1], $sealed[0], $parameters, $this->passphrase, $this->salt);
 
         $this->assertEquals($plainText, $opened);
     }
