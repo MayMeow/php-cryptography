@@ -8,10 +8,10 @@ class RSAParameters
 {
     private string $privateKey;
     private string $publicKey;
-    private string $passphrase;
+    private ?string $passphrase = 'test_passphrase';
 
     protected array $config = [
-        'digest_alg' => 'sha512',
+        'digest_alg' => 'sha256',
         'private_key_bits' => 4096,
         'private_key_type' => OPENSSL_KEYTYPE_RSA,
     ];
@@ -31,15 +31,9 @@ class RSAParameters
     {
         $keys = openssl_pkey_new($this->config);
 
-        if ($passphrase != null) {
-            $this->passphrase = $passphrase;
-        } else {
-            $this->passphrase = (string)rand(100000, 999999);
-        }
-
         if ($keys) {
-            openssl_pkey_export($keys, $private, $passphrase, $configArgs);
-            $this->privateKey = $private;
+            openssl_pkey_export($keys, $private);
+            $this->privateKey = $this->encryptPrivateKey(privateKey: $private);
 
             $pub = openssl_pkey_get_details($keys);
 
@@ -51,22 +45,40 @@ class RSAParameters
         return $this;
     }
 
+    private function encryptPrivateKey(string $privateKey, string $salt = 'salt'): string
+    {
+        $aes = new AESCryptoServiceProvider();
+        $aes->generateIV();
+        $k = new CryptoKey();
+        $key = $k->getCryptographicKey($this->passphrase, $salt);
+        $aes->setKey($key);
+
+        return $aes->encrypt($privateKey);
+    }
+
+    private function decryptPrivateKey(string $privateKey, string $salt = 'salt'): string
+    {
+        $aes = new AESCryptoServiceProvider();
+        $k = new CryptoKey();
+        $key = $k->getCryptographicKey($this->passphrase, $salt);
+        $aes->setKey($key);
+
+        return $aes->decrypt($privateKey);
+    }
+
     /**
      * Returns Decrypted Key
      *
      * @return string|\OpenSSLAsymmetricKey
      * @throws DecryptPrivateKeyException
      */
-    public function getPrivateKey(): \OpenSSLAsymmetricKey|string
+    public function getPrivateKey(string $salt = 'salt', bool $encrypted = false): \OpenSSLAsymmetricKey|string
     {
-        if ($this->passphrase != null && $this->privateKey != null) {
-            $privateKeyResource = openssl_pkey_get_private($this->privateKey, $this->passphrase);
-
-            if ($privateKeyResource == false) {
-                throw new DecryptPrivateKeyException();
-            }
-
-            return $privateKeyResource;
+        if (!$encrypted) {
+            return $this->decryptPrivateKey(
+                privateKey: $this->privateKey,
+                salt: $salt
+            );
         }
 
         return $this->privateKey;
@@ -78,7 +90,7 @@ class RSAParameters
      * @param string $privateKey
      * @param string $passphrase
      */
-    public function setPrivateKey(string $privateKey, string $passphrase): void
+    public function setPrivateKey(string $privateKey, string $passphrase, string $salt = 'salt'): void
     {
         $this->passphrase = $passphrase;
         $this->privateKey = $privateKey;
@@ -109,7 +121,7 @@ class RSAParameters
      *
      * @return string
      */
-    public function getPassphrase(): string
+    public function getPassphrase(): ?string
     {
         return $this->passphrase;
     }
@@ -141,5 +153,24 @@ class RSAParameters
     public function setConfig(array $config): void
     {
         $this->config = $config;
+    }
+
+    /**
+     * Returns the fingerprint of the public key.
+     *
+     * @param bool $md5 Whether to return the MD5 fingerprint instead of SHA-256.
+     * @return string The fingerprint of the public key.
+     */
+    public function getFingerprint(bool $md5 = false): string
+    {
+        $derData = preg_replace('/-----.*?-----/', '', base64_decode($this->publicKey));
+        $derData = preg_replace('/\s+/', '', $derData);
+        $derData = base64_decode($derData);
+
+        if ($md5) {
+            return implode(':', str_split(hash('md5', $derData), 2));
+        }
+
+        return hash('sha256', $derData);
     }
 }
