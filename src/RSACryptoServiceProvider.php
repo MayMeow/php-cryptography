@@ -32,10 +32,10 @@ class RSACryptoServiceProvider
     /**
      * decrypt with private key
      */
-    public function decrypt(string $encryptedText): string
+    public function decrypt(string $encryptedText, string $privateKeyPass, string $salt): string
     {
         $plainText = '';
-        $privKey = $this->parameters->getPrivateKey();
+        $privKey = $this->parameters->getPrivateKey(passphrase: $privateKeyPass, salt: $salt);
 
         openssl_private_decrypt(base64_decode($encryptedText), $plainText, $privKey);
 
@@ -48,10 +48,10 @@ class RSACryptoServiceProvider
      * @param string $plainText
      * @return string
      */
-    public function privateEncrypt(string $plainText): string
+    public function privateEncrypt(string $plainText, string $privateKeyPass, string $salt): string
     {
         $encrypted = '';
-        $privKey = $this->parameters->getPrivateKey();
+        $privKey = $this->parameters->getPrivateKey(passphrase: $privateKeyPass, salt: $salt);
 
         openssl_private_encrypt($plainText, $encrypted, $privKey);
 
@@ -78,9 +78,9 @@ class RSACryptoServiceProvider
      * @param string $data
      * @return string
      */
-    public function sign(string $data): string
+    public function sign(string $data, string $privateKeyPass, string $salt): string
     {
-        $privKey = $this->getPrivateKey();
+        $privKey = $this->parameters->getPrivateKey(passphrase: $privateKeyPass, salt: $salt);
 
         $result = openssl_sign($data, $signature, $privKey, OPENSSL_ALGO_SHA512);
 
