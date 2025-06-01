@@ -71,8 +71,11 @@ class RSAParameters
      * @return string|\OpenSSLAsymmetricKey
      * @throws DecryptPrivateKeyException
      */
-    public function getPrivateKey(string $passphrase, string $salt = 'salt', bool $encrypted = false): \OpenSSLAsymmetricKey|string
-    {
+    public function getPrivateKey(
+        string $passphrase,
+        string $salt = 'salt',
+        bool $encrypted = false
+    ): \OpenSSLAsymmetricKey|string {
         if (!$encrypted) {
             return $this->decryptPrivateKey(
                 privateKey: $this->privateKey,
