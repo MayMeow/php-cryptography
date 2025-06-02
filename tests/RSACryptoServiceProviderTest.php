@@ -37,7 +37,10 @@ class RSACryptoServiceProviderTest extends TestCase
     {
         $plainText = "This is going";
         $parameters = new RSAParameters();
-        $parameters->generateKeys(passphrase: $this->passphrase, salt: $this->salt);
+        $parameters->generateKeys(passphrase: $this->passphrase, salt: $this->salt, configArgs: [
+            'private_key_type' => OPENSSL_KEYTYPE_RSA,
+            'private_key_bits' => 2048
+        ]);
 
         $rsa = new RSACryptoServiceProvider();
         $rsa->setParameters($parameters);
