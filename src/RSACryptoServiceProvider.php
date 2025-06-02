@@ -135,7 +135,7 @@ class RSACryptoServiceProvider
     {
         // Use SHA256 for EC keys, SHA512 for RSA keys
         $algorithm = $this->isECKey() ? OPENSSL_ALGO_SHA256 : OPENSSL_ALGO_SHA512;
-        
+
         $verification = openssl_verify(
             $data,
             base64_decode($signature),

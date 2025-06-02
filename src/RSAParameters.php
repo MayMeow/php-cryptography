@@ -14,7 +14,7 @@ class RSAParameters
         'ec' => [
             'curve_name' => 'prime256v1', // NIST P-256, equivalent to RSA 3072-bit security
         ]
-        
+
     ];
 
     public function __construct()

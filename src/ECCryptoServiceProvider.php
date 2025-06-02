@@ -73,7 +73,7 @@ class ECCryptoServiceProvider
     /**
      * Direct encryption is not supported with EC keys.
      * Use AES encryption with key derivation for data encryption.
-     * 
+     *
      * @deprecated EC keys do not support direct encryption. Use hybrid encryption instead.
      * @throws NotImplementedException
      */
@@ -88,7 +88,7 @@ class ECCryptoServiceProvider
     /**
      * Direct decryption is not supported with EC keys.
      * Use AES decryption with key derivation for data decryption.
-     * 
+     *
      * @deprecated EC keys do not support direct decryption. Use hybrid encryption instead.
      * @throws NotImplementedException
      */
@@ -103,7 +103,7 @@ class ECCryptoServiceProvider
     /**
      * Private encryption is not supported with EC keys.
      * EC keys are designed for signatures, not encryption.
-     * 
+     *
      * @deprecated EC keys do not support encryption operations. Use sign() instead.
      * @throws NotImplementedException
      */
@@ -118,7 +118,7 @@ class ECCryptoServiceProvider
     /**
      * Public decryption is not supported with EC keys.
      * EC keys are designed for signatures, not encryption.
-     * 
+     *
      * @deprecated EC keys do not support decryption operations. Use verify() instead.
      * @throws NotImplementedException
      */
