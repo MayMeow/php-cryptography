@@ -106,7 +106,7 @@ class ECMigrationTest extends TestCase
         $crypto = new RSACryptoServiceProvider();
         $crypto->setParameters($params);
         
-        $plainText = "Test encryption data";
+        $plainText = "Test encryption RSA data";
         $encrypted = $crypto->encrypt($plainText);
         $decrypted = $crypto->decrypt($encrypted, $this->passphrase, $this->salt);
         
