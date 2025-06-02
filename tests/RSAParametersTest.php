@@ -65,6 +65,10 @@ class RSAParametersTest extends TestCase
         // read previously exported parameters
         $reader = new RsaParametersReader($locator);
         $parameters2 = $reader->read();
+        $parameters2->setConfig([
+            'private_key_type' => OPENSSL_KEYTYPE_RSA,
+            'private_key_bits' => 2048
+        ]);
 
         
         // create new instance of RSA CSP with imported parameters
