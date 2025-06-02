@@ -31,7 +31,7 @@ class RSAParameters
     public function generateKeys(string $passphrase, ?array $configArgs = null, string $salt = 'salt'): RSAParameters
     {
         if ($configArgs !== null) {
-            $this->config = array_merge($this->config, $configArgs);
+            $this->config = $configArgs;
         }
 
         $keys = openssl_pkey_new($this->config);
