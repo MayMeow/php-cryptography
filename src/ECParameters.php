@@ -4,7 +4,7 @@ namespace MayMeow\Cryptography;
 
 use MayMeow\Cryptography\Exceptions\DecryptPrivateKeyException;
 
-class RSAParameters
+class ECParameters
 {
     private string $privateKey;
     private string $publicKey;
@@ -14,7 +14,6 @@ class RSAParameters
         'ec' => [
             'curve_name' => 'prime256v1', // NIST P-256, equivalent to RSA 3072-bit security
         ]
-
     ];
 
     public function __construct()
@@ -22,16 +21,17 @@ class RSAParameters
     }
 
     /**
-     * Generate keypair and passphrase to decrypt private key
+     * Generate EC keypair and passphrase to decrypt private key
      *
-     * @param string|null $passphrase
+     * @param string $passphrase
      * @param array|null $configArgs
+     * @param string $salt
      * @return $this
      */
-    public function generateKeys(string $passphrase, ?array $configArgs = null, string $salt = 'salt'): RSAParameters
+    public function generateKeys(string $passphrase, ?array $configArgs = null, string $salt = 'salt'): ECParameters
     {
         if ($configArgs !== null) {
-            $this->config = $configArgs;
+            $this->config = array_merge($this->config, $configArgs);
         }
 
         $keys = openssl_pkey_new($this->config);
@@ -94,10 +94,9 @@ class RSAParameters
     }
 
     /**
-     * Set private key from string representation and its passphrase
+     * Set private key from string representation
      *
      * @param string $privateKey
-     * @param string $passphrase
      */
     public function setPrivateKey(string $privateKey): void
     {

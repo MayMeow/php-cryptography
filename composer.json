@@ -30,6 +30,7 @@
     },
     "scripts": {
         "test": "phpunit tests",
+        "test-failing": "phpunit tests --group failing",
         "cs-check": "phpcs --standard=PSR12 src",
         "cs-fix": "phpcbf --standard=PSR12 src",
         "stan": "phpstan analyse"
