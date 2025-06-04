@@ -103,6 +103,9 @@ class AESCryptoServiceProvider
      * Returns encrypted text
      *
      * @param string $plainText
+     * @param bool $legacy
+     * If true, returns IV-TAG-EncryptedData format
+     * If false, returns IV-EncryptedData-TAG format
      * @return string
      */
     public function encrypt(string $plainText, bool $legacy = false): string
@@ -127,6 +130,9 @@ class AESCryptoServiceProvider
      * Decrypt given text
      *
      * @param string $encryptedData
+     * @param bool $legacy
+     * If true, expects IV-TAG-EncryptedData format
+     * If false, expects IV-EncryptedData-TAG format
      * @return string
      * @throws DecryptException
      * @throws IvGenerateException
