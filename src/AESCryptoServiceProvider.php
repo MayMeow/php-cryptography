@@ -119,11 +119,30 @@ class AESCryptoServiceProvider
             $this->tag
         );
 
-        if ($legacy) {
-            return base64_encode($this->iv . $this->tag . $encryptedBytes);
-        }
+        return base64_encode($this->buildPayload(
+            iv: $this->iv,
+            tag: $this->tag,
+            encryptedData: $encryptedBytes,
+            legacy: $legacy
+        ));
+    }
 
-        return base64_encode($this->iv . $encryptedBytes . $this->tag);
+    /**
+     * Build payload for encrypted data
+     *
+     * @param string $iv
+     * @param string $tag
+     * @param string $encryptedData
+     * @param bool $legacy
+     * If true, returns IV-TAG-EncryptedData format
+     * If false, returns IV-EncryptedData-TAG format
+     * @return string
+     */
+    protected function buildPayload(string $iv, string $tag, string $encryptedData, bool $legacy): string
+    {
+        return $legacy
+            ? $iv . $tag . $encryptedData // IV-TAG-EncryptedData
+            : $iv . $encryptedData . $tag; // IV-EncryptedData-TAG
     }
 
     /**
