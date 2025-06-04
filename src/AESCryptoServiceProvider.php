@@ -147,14 +147,14 @@ class AESCryptoServiceProvider
             throw new IvGenerateException();
         }
 
+        $this->iv = substr($c, 0, $iv_len);
+
         if ($legacy) {
             // IV-TAG-EncryptedData
-            $this->iv = substr($c, 0, $iv_len); // from begining to iv lenght 12 bytes
             $this->tag = substr($c, $iv_len, static::DEFAULT_GCM_TAG_LENGTH); // tag is 16 bytes after iv
             $encryptedBytes = substr($c, $iv_len + static::DEFAULT_GCM_TAG_LENGTH); // encrypted data are at the end
         } else {
             // IV-EncryptedData-TAG
-            $this->iv = substr($c, 0, $iv_len); // from begining to iv lenght 12 bytes
             $encryptedBytes = substr($c, $iv_len, -static::DEFAULT_GCM_TAG_LENGTH); // encrypted data are in the middle
             $this->tag = substr($c, -static::DEFAULT_GCM_TAG_LENGTH); // tag is at the end
         }
