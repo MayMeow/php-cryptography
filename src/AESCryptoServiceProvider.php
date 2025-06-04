@@ -152,7 +152,7 @@ class AESCryptoServiceProvider
             $encryptedBytes = substr($c, $iv_len, -static::DEFAULT_GCM_TAG_LENGTH); // encrypted data are in the middle
             $this->tag = substr($c, -static::DEFAULT_GCM_TAG_LENGTH); // tag is at the end
         }
-        
+
         $decryptedText =  openssl_decrypt(
             $encryptedBytes,
             $this->cipher,
