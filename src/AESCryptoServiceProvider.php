@@ -103,9 +103,12 @@ class AESCryptoServiceProvider
      * Returns encrypted text
      *
      * @param string $plainText
+     * @param bool $legacy
+     * If true, returns IV-TAG-EncryptedData format
+     * If false, returns IV-EncryptedData-TAG format
      * @return string
      */
-    public function encrypt(string $plainText): string
+    public function encrypt(string $plainText, bool $legacy = false): string
     {
         $encryptedBytes = openssl_encrypt(
             $plainText,
@@ -116,18 +119,44 @@ class AESCryptoServiceProvider
             $this->tag
         );
 
-        return base64_encode($this->iv . $this->tag . $encryptedBytes);
+        return base64_encode($this->buildPayload(
+            iv: $this->iv,
+            tag: $this->tag,
+            encryptedData: $encryptedBytes,
+            legacy: $legacy
+        ));
+    }
+
+    /**
+     * Build payload for encrypted data
+     *
+     * @param string $iv
+     * @param string $tag
+     * @param string $encryptedData
+     * @param bool $legacy
+     * If true, returns IV-TAG-EncryptedData format
+     * If false, returns IV-EncryptedData-TAG format
+     * @return string
+     */
+    protected function buildPayload(string $iv, string $tag, string $encryptedData, bool $legacy): string
+    {
+        return $legacy
+            ? $iv . $tag . $encryptedData // IV-TAG-EncryptedData
+            : $iv . $encryptedData . $tag; // IV-EncryptedData-TAG
     }
 
     /**
      * Decrypt given text
      *
      * @param string $encryptedData
+     * @param bool $legacy
+     * If true, expects IV-TAG-EncryptedData format
+     * If false, expects IV-EncryptedData-TAG format
      * @return string
      * @throws DecryptException
      * @throws IvGenerateException
      */
-    public function decrypt(string $encryptedData): string
+    public function decrypt(string $encryptedData, bool $legacy = false): string
     {
         $c = base64_decode($encryptedData);
 
@@ -137,9 +166,11 @@ class AESCryptoServiceProvider
             throw new IvGenerateException();
         }
 
-        $this->iv = substr($c, 0, $iv_len);
-        $this->tag = substr($c, $iv_len, static::DEFAULT_GCM_TAG_LENGTH);
-        $encryptedBytes = substr($c, $iv_len + static::DEFAULT_GCM_TAG_LENGTH);
+        [$this->iv, $encryptedBytes, $this->tag] = $this->parsePayload(
+            cipherText: $c,
+            ivLength: $iv_len,
+            legacy: $legacy
+        );
 
         $decryptedText =  openssl_decrypt(
             $encryptedBytes,
@@ -155,6 +186,26 @@ class AESCryptoServiceProvider
         }
 
         return  $decryptedText;
+    }
+
+    /**
+     * Parse payload from encrypted data
+     *
+     * @param string $cipherText
+     * @param int $ivLength
+     * @param bool $legacy
+     * If true, expects IV-TAG-EncryptedData format
+     * If false, expects IV-EncryptedData-TAG format
+     * @return array That contains IV, EncryptedData and TAG in that order
+     */
+    protected function parsePayload(string $cipherText, int $ivLength, bool $legacy = false): array
+    {
+        $iv = substr($cipherText, 0, $ivLength);
+        $tagLength = static::DEFAULT_GCM_TAG_LENGTH;
+
+        return $legacy
+            ? [$iv, substr($cipherText, $ivLength + $tagLength), substr($cipherText, $ivLength, $tagLength)]
+            : [$iv, substr($cipherText, $ivLength, -$tagLength), substr($cipherText, -$tagLength)];
     }
 
     /**
