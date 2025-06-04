@@ -16,10 +16,12 @@ class AESCryptoServiceProviderTest extends TestCase
 
         $plainText = "This is going to be encrypted!";
         $encryptedText= $csp->encrypt($plainText);
+        $encryptedTextLegacy = $csp->encrypt($plainText, legacy: true);
 
         $csp2 = new AESCryptoServiceProvider();
         $csp2->setKey($key);
 
         $this->assertEquals($plainText, $csp2->decrypt($encryptedText));
+        $this->assertEquals($plainText, $csp2->decrypt($encryptedTextLegacy, legacy: true));
     }
 }

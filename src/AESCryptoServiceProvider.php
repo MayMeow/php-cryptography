@@ -105,7 +105,7 @@ class AESCryptoServiceProvider
      * @param string $plainText
      * @return string
      */
-    public function encrypt(string $plainText): string
+    public function encrypt(string $plainText, bool $legacy = false): string
     {
         $encryptedBytes = openssl_encrypt(
             $plainText,
@@ -116,7 +116,11 @@ class AESCryptoServiceProvider
             $this->tag
         );
 
-        return base64_encode($this->iv . $this->tag . $encryptedBytes);
+        if ($legacy) {
+            return base64_encode($this->iv . $this->tag . $encryptedBytes);
+        }
+
+        return base64_encode($this->iv . $encryptedBytes . $this->tag);
     }
 
     /**
@@ -127,7 +131,7 @@ class AESCryptoServiceProvider
      * @throws DecryptException
      * @throws IvGenerateException
      */
-    public function decrypt(string $encryptedData): string
+    public function decrypt(string $encryptedData, bool $legacy = false): string
     {
         $c = base64_decode($encryptedData);
 
@@ -137,10 +141,18 @@ class AESCryptoServiceProvider
             throw new IvGenerateException();
         }
 
-        $this->iv = substr($c, 0, $iv_len);
-        $this->tag = substr($c, $iv_len, static::DEFAULT_GCM_TAG_LENGTH);
-        $encryptedBytes = substr($c, $iv_len + static::DEFAULT_GCM_TAG_LENGTH);
-
+        if ($legacy) {
+            // IV-TAG-EncryptedData
+            $this->iv = substr($c, 0, $iv_len); // from begining to iv lenght 12 bytes
+            $this->tag = substr($c, $iv_len, static::DEFAULT_GCM_TAG_LENGTH); // tag is 16 bytes after iv
+            $encryptedBytes = substr($c, $iv_len + static::DEFAULT_GCM_TAG_LENGTH); // encrypted data are at the end
+        } else {
+            // IV-EncryptedData-TAG
+            $this->iv = substr($c, 0, $iv_len); // from begining to iv lenght 12 bytes
+            $encryptedBytes = substr($c, $iv_len, -static::DEFAULT_GCM_TAG_LENGTH); // encrypted data are in the middle
+            $this->tag = substr($c, -static::DEFAULT_GCM_TAG_LENGTH); // tag is at the end
+        }
+        
         $decryptedText =  openssl_decrypt(
             $encryptedBytes,
             $this->cipher,
