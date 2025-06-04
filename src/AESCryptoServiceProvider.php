@@ -166,17 +166,11 @@ class AESCryptoServiceProvider
             throw new IvGenerateException();
         }
 
-        $this->iv = substr($c, 0, $iv_len);
-
-        if ($legacy) {
-            // IV-TAG-EncryptedData
-            $this->tag = substr($c, $iv_len, static::DEFAULT_GCM_TAG_LENGTH); // tag is 16 bytes after iv
-            $encryptedBytes = substr($c, $iv_len + static::DEFAULT_GCM_TAG_LENGTH); // encrypted data are at the end
-        } else {
-            // IV-EncryptedData-TAG
-            $encryptedBytes = substr($c, $iv_len, -static::DEFAULT_GCM_TAG_LENGTH); // encrypted data are in the middle
-            $this->tag = substr($c, -static::DEFAULT_GCM_TAG_LENGTH); // tag is at the end
-        }
+        [$this->iv, $encryptedBytes, $this->tag] = $this->parsePayload(
+            cipherText: $c,
+            ivLength: $iv_len,
+            legacy: $legacy
+        );
 
         $decryptedText =  openssl_decrypt(
             $encryptedBytes,
@@ -192,6 +186,26 @@ class AESCryptoServiceProvider
         }
 
         return  $decryptedText;
+    }
+
+    /**
+     * Parse payload from encrypted data
+     *
+     * @param string $cipherText
+     * @param int $ivLength
+     * @param bool $legacy
+     * If true, expects IV-TAG-EncryptedData format
+     * If false, expects IV-EncryptedData-TAG format
+     * @return array That contains IV, EncryptedData and TAG in that order
+     */
+    protected function parsePayload(string $cipherText, int $ivLength, bool $legacy = false): array
+    {
+        $iv = substr($cipherText, 0, $ivLength);
+        $tagLength = static::DEFAULT_GCM_TAG_LENGTH;
+
+        return $legacy
+            ? [$iv, substr($cipherText, $ivLength + $tagLength), substr($cipherText, $ivLength, $tagLength)]
+            : [$iv, substr($cipherText, $ivLength, -$tagLength), substr($cipherText, -$tagLength)];
     }
 
     /**
